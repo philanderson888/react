@@ -117,6 +117,21 @@
   - [Pick up again from where we left off](#pick-up-again-from-where-we-left-off)
   - [Run the app on 5000 (server) and 3000 (client)](#run-the-app-on-5000-server-and-3000-client)
   - [Work on `state`](#work-on-state)
+  - [client\src\actions\types.js](#clientsrcactionstypesjs)
+  - [client\src\actions\reducers\index.js](#clientsrcactionsreducersindexjs)
+  - [client\src\actions\reducers\errorReducer.js](#clientsrcactionsreducerserrorreducerjs)
+  - [client\src\actions\reducers\authReducer.js](#clientsrcactionsreducersauthreducerjs)
+    - [Running app](#running-app)
+  - [client\src\actions\authActions.js](#clientsrcactionsauthactionsjs)
+  - [client\src\actions\errorActions.js](#clientsrcactionserroractionsjs)
+  - [add to App.js and ensure we call the authActions every time](#add-to-appjs-and-ensure-we-call-the-authactions-every-time)
+  - [amend back end auth.js by one line](#amend-back-end-authjs-by-one-line)
+    - [What is working?](#what-is-working)
+  - [Build out login and registration components in client\src\components\auth folder\RegisterModal.js](#build-out-login-and-registration-components-in-clientsrccomponentsauth-folderregistermodaljs)
+    - [In RegisterModal.js 1) On Click call an action in the authActions file called Register 2) Add as prop](#in-registermodaljs-1-on-click-call-an-action-in-the-authactions-file-called-register-2-add-as-prop)
+    - [Create function inside src\actions\authActions.js](#create-function-inside-srcactionsauthactionsjs)
+    - [update onSubmit in RegisterModal.js](#update-onsubmit-in-registermodaljs)
+    - [display error to user on fail to submit](#display-error-to-user-on-fail-to-submit)
 
 
 ## Author
@@ -2486,6 +2501,615 @@ two new actions files
 
 a) auth
 b) error
+
+
+*Note: at this point I stop working on `mern-stack-shopping-list-03` and move on to `mern-stack-shopping-list-04` and move on at this point
+
+## client\src\actions\types.js
+
+```js
+export const GET_ITEMS = 'GET_ITEMS';
+export const ADD_ITEM = 'ADD_ITEM';
+export const DELETE_ITEM = 'DELETE_ITEM';
+export const ITEMS_LOADING = 'ITEMS_LOADING';
+export const USER_LOADING = 'USER_LOADING';
+export const USER_LOADED = 'USER_LOADED';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAIL = 'REGISTER_FAIL';
+export const GET_ERRORS = 'GET_ERRORS';
+export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+```
+
+## client\src\actions\reducers\index.js
+
+```js
+import { combineReducers } from 'redux';
+import itemReducer from './itemReducer';
+import errorReducer from './errorReducer';
+import authReducer from './authReducer';
+export default combineReducers({
+    item: itemReducer,
+    error: errorReducer,
+    auth: authReducer
+});
+```
+
+## client\src\actions\reducers\errorReducer.js
+
+```js
+import { GET_ERRORS, CLEAR_ERRORS } from '../actions/types';
+const initialState = {
+    msg: {},
+    status: null,
+    id: null
+}
+export default function(state = initialState, action){
+    switch(action.type){
+        case GET_ERRORS:
+            return {
+                msg: action.payload.msg,
+                status: action.payload.status,
+                id: action.payload.id
+            };
+        case CLEAR_ERRORS:
+            return {
+                msg: {},
+                status: null,
+                id: null
+            };
+        default:
+            return state; 
+    }
+}
+```
+
+## client\src\actions\reducers\authReducer.js
+
+
+```js
+ import {
+     USER_LOADED, USER_LOADING, 
+     AUTH_ERROR,
+     LOGIN_SUCCESS, LOGIN_FAIL, 
+     LOGOUT_SUCCESS,LOGOUT_FAIL,
+     REGISTER_SUCCESS, REGISTER_FAIL
+ } from '../actions/types';
+const initialState = {
+    token: localStorage.getItem('token'),
+    isAuthenticated: null,
+    isLoading: false,
+    user: null
+}
+// user_loaded runs every time with every request to see if we are logged in or not
+export default function(state = initialState, action) {
+    switch (action.type){
+        case USER_LOADING:
+            return {
+                ...state,
+                isLoading:true
+            };
+        case USER_LOADED:
+            return {
+                ...state,
+                isAuthenticated: true,
+                isLoading: false,
+                user: action.payload
+            };
+        case LOGIN_SUCCESS:
+        case REGISTER_SUCCESS:
+            localStorage.setItem('token',action.payload.token)
+            return {
+                ...state,
+                ...action.payload,
+                isAuthenticated: true,
+                isLoading: false 
+            };
+        case AUTH_ERROR:
+        case LOGIN_FAIL:
+        case LOGOUT_SUCCESS:
+        case REGISTER_FAIL:
+            localStorage.removeItem('token');
+            return {
+                ...state,
+                token: null,
+                user: null,
+                isAuthenticated: false,
+                isLoading: false
+            }
+        default: 
+            return state;
+    }
+}
+```
+
+### Running app
+
+```js
+cd c:\github\react\StandaloneProjects\mern-stack-shopping-list-04\;yarn dev
+```
+
+
+## client\src\actions\authActions.js
+
+```js
+import axios from 'axios';
+import { returnErrors } from './errorActions';
+import {    USER_LOADED, USER_LOADING, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, 
+            LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
+} from './types'
+// check token and load user
+export const loadUser = () => (dispatch, getState) => {
+    dispatch({ type: USER_LOADING });
+    // get token from localStorage
+    const token = getState().auth.token;
+    // headers
+    const config = {
+        headers: {
+            "Content-type": "application/json"
+        }
+    }
+    // if token then add to headers
+    // this is the critical line which adds the token into the header of the http request!!!!
+    if(token){
+        config.headers['x-auth-token'] = token;
+    }
+    // res.data holds user object and token
+    axios.get('/api/auth/user', config)
+        .then(res => 
+            dispatch({
+                type: USER_LOADED,
+                payload: res.data
+            })
+        )
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({
+                type: AUTH_ERROR
+            });
+        });
+};
+```
+
+## client\src\actions\errorActions.js
+
+```js
+import { GET_ERRORS, CLEAR_ERRORS } from './types';
+export const returnErrors = (msg, status, id = null) => {
+    return {
+        type: GET_ERRORS,
+        payload: { msg, status, id }
+    };
+};
+export const clearErrors = () => {
+    return {
+        type: CLEAR_ERRORS
+    };
+};
+```
+
+## add to App.js and ensure we call the authActions every time
+
+```js
+import React, { Component } from 'react';
+import AppNavbar from './components/AppNavbar'
+import ShoppingList from './components/ShoppingList';
+import ItemModal from './components/itemModal';
+import { Provider } from 'react-redux';
+import store from './store';
+import 'bootstrap/dist/css/bootstrap.min.css' 
+import './App.css';
+import { Container } from 'reactstrap';
+import { loadUser } from './actions/authActions';
+class App extends Component {
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
+  render(){
+    return (
+      <Provider store={store}>
+        <div className="App">
+          <AppNavbar />
+          <Container>
+            <ItemModal />
+            <ShoppingList />
+          </Container>    
+        </div>
+      </Provider>
+    );  
+  }
+}
+export default App;
+```
+
+## amend back end auth.js by one line
+
+```js
+const config = require ('config');
+const jwt = require ('jsonwebtoken');
+// middleware 
+// goal is to get token from the header request
+function auth(req,res,next){
+    const token = req.header('x-auth-token');
+    if(!token) 
+        return res.status(401).json({msg: 'No token, authorization denied'});
+    try{
+        const decoded = jwt.verify(token,config.get('jwtSecret'));
+        req.user = decoded;
+        next();    
+    }
+    catch(e){
+        res.status(400).json({msg:"invalid token"})
+    }
+}
+module.exports = auth;
+```
+
+
+### What is working?
+
+At this point we can see
+
+```
+http://localhost:5000/api/users
+http://localhost:5000/api/items
+http://localhost:3000/
+```
+
+ 
+## Build out login and registration components in client\src\components\auth folder\RegisterModal.js
+
+```js
+import React, { Component } from 'react';
+import {
+    Button,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    NavLink
+} from 'reactstrap';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types'
+// by default modal is not open so set to false
+class RegisterModal extends Component {
+    state = { 
+        modal: false,
+        name: '',
+        email: '',
+        password: '',
+        msg: null
+    }
+    static propTypes = {
+        isAuthenticated: PropTypes.bool,
+        error: PropTypes.object.isRequired
+    }
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+    // e is an event parameter 
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+    onSubmit = (e) => {
+        e.preventDefault();
+        // close modal
+        this.toggle();
+    }
+    render(){
+        return(
+            <div>
+                <NavLink onClick={this.toggle} href="#">Register</NavLink>
+                <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Register</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.onSubmit}>
+                            <FormGroup>
+                                <Label for="name">Name</Label>
+                                {/* name matches field from state */}
+                                {/* onChange fired on every keystroke */}
+                                <Input type="text" name="name" id="name" placeholder="Name" onChange={this.onChange} />
+                                <Label for="email">Email</Label>
+                                <Input type="email" name="email" id="email" placeholder="Email" onChange={this.onChange} />
+                                <Label for="password">Password</Label>
+                                <Input type="password" name="password" id="password" placeholder="Password" onChange={this.onChange} />
+                                 <Button color="dark" block style={{ marginTop:'2rem' }}>Register</Button>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
+// get items from reducer
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    error: state.error
+});
+export default connect(mapStateToProps, { })(RegisterModal);
+```
+
+Import RegisterModal.js into AppNavbar.js
+
+```js
+import React, { Component } from 'react'
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    NavLink,
+    Container
+} from 'reactstrap'
+import RegisterModal from './auth/RegisterModal'
+class AppNavbar extends Component {
+    state = {
+        isOpen:false
+    }
+    toggle = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
+    // mb-5 is margin-bottom:5 below the navbar
+    // ml-auto aligns links to right
+    render(){
+        return(
+            <div>
+            <Navbar color="dark" dark expand="sm" className="mb-5" >
+                <Container>
+                    <NavbarBrand href="/">ShoppingList</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar >
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <RegisterModal />
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Container>
+            </Navbar>
+        </div>
+        )
+    }
+}
+export default AppNavbar
+```
+
+We now have the registration component popping up correctly as a modal 
+
+### In RegisterModal.js 1) On Click call an action in the authActions file called Register 2) Add as prop 
+
+```js
+import { register } from '../../actions/authActions'
+
+static propTypes = {
+    isAuthenticated: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired
+}
+
+export default connect(mapStateToProps, { register })(RegisterModal);
+```
+
+### Create function inside src\actions\authActions.js
+
+```js
+import axios from 'axios';
+import { returnErrors } from './errorActions';
+import {    USER_LOADED, USER_LOADING, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, 
+            LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
+} from './types'
+// check token and load user
+// whenever we need the token call tokenConfig(getState) which gets token
+export const loadUser = () => (dispatch, getState) => {
+    dispatch({ type: USER_LOADING });
+    // res.data holds user object and token
+    axios.get('/api/auth/user', tokenConfig(getState))
+        .then(res => 
+            dispatch({
+                type: USER_LOADED,
+                payload: res.data
+            })
+        )
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status));
+            dispatch({
+                type: AUTH_ERROR
+            });
+        });
+};
+// Register User
+// using {} destructures an object
+export const register = ({name, email, password}) => dispatch => {
+    // headers
+    const config = {
+        headers: {
+            'Content-Type': 'appplication/json'
+        }
+    }
+    // Request body
+    // res.data has user and token 
+    // check authReducer for REGISTER_FAIL
+    // use returnErrors method in actions\errorActions 
+    const body = JSON.stringify({name, email, password})
+    axios.post ('/api/users', body, config)
+        .then(res => dispatch({
+            type: REGISTER_SUCCESS,
+            payload: res.data
+        }))
+        .catch(err => {
+            dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
+            dispatch({
+                type: REGISTER_FAIL
+            });
+        })
+
+}
+
+// setup config / headers and token
+export const tokenConfig = getState => {
+   // get token from localStorage
+   const token = getState().auth.token;
+   // headers
+   const config = {
+       headers: {
+           "Content-type": "application/json"
+       }
+   }
+   // if token then add to headers
+   // this is the critical line which adds the token into the header of the http request!!!!
+   if(token){
+       config.headers['x-auth-token'] = token;
+   }
+    
+   return config;
+}
+```
+
+### update onSubmit in RegisterModal.js
+
+```js
+onSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, password } = this.state;
+    const newUser = { name, email, password };
+    // try to register new user
+    this.props.register(newUser);
+}
+```
+
+### display error to user on fail to submit
+
+```js
+import React, { Component } from 'react';
+import {
+    Button,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    NavLink,
+    Alert
+} from 'reactstrap';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types'
+import { register } from '../../actions/authActions'
+// by default modal is not open so set to false
+class RegisterModal extends Component {
+    state = { 
+        modal: false,
+        name: '',
+        email: '',
+        password: '',
+        msg: null
+    }
+    static propTypes = {
+        isAuthenticated: PropTypes.bool,
+        error: PropTypes.object.isRequired,
+        register: PropTypes.func.isRequired
+    }
+    // built-in lifecycle hook
+    // error is available to us because we imported it in at const mapStateToProps
+    componentDidUpdate(prevProps){
+        const error = this.props; 
+        // see if error has changed
+        if (error !== prevProps.error){
+            if (error.id === 'REGISTER_FAIL'){
+                this.setState({ msg: error.msg.msg });
+            } else {
+                this.setState ({ msg:null })
+            }
+        }
+    }
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+    // e is an event parameter 
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+    onSubmit = (e) => {
+        e.preventDefault();
+        const { name, email, password } = this.state;
+        const newUser = { name, email, password };
+        // try to register new user
+        this.props.register(newUser);
+    }
+    render(){
+        return(
+            <div>
+                <NavLink onClick={this.toggle} href="#">Register</NavLink>
+                <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Register</ModalHeader>
+                    <ModalBody>
+                        { this.state.msg ? <Alert color="danger">{this.state.msg}</Alert> :  null}
+                        <Form onSubmit={this.onSubmit}>
+                            <FormGroup>
+                                {/* name matches field from state */}
+                                {/* onChange fired on every keystroke */}
+                                {/* className="mb-3" adds margin bottom 3 */}
+                                <Label for="name">Name</Label>
+                                <Input type="text" name="name" id="name" placeholder="Name" onChange={this.onChange} className="mb-3" />
+                                <Label for="email">Email</Label>
+                                <Input type="email" name="email" id="email" placeholder="Email" onChange={this.onChange} className="mb-3" />
+                                <Label for="password">Password</Label>
+                                <Input type="password" name="password" id="password" placeholder="Password" onChange={this.onChange} className="mb-3" />
+                                <Button color="dark" block style={{ marginTop:'2rem' }}>Register</Button>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
+// get items from reducer
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
+    error: state.error
+});
+// register is a prop
+export default connect(mapStateToProps, { register })(RegisterModal);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
