@@ -14,8 +14,15 @@ export const getItems = () => dispatch => {
 }
 // res.data is the new item 
 export const addItem = (item) => dispatch => {
+    const config = {
+        headers: {
+            "x-auth-token" : localStorage.getItem('token')
+        }
+    }
+    console.log(`attempting to POST in itemActions.js ie item is ${JSON.stringify(item)} 
+            and headers are ${JSON.stringify(config)}}`)
     axios
-        .post('/api/items', item)
+        .post('/api/items', item, config)
         .then( res => 
             dispatch({
                 type: ADD_ITEM,
@@ -24,8 +31,17 @@ export const addItem = (item) => dispatch => {
         )
 }
 export const deleteItem = (id) => dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-auth-token" : localStorage.getItem('token')
+        }
+    }
+    console.group(`attempting to DELETE AN ITEM in itemActions js ie item ID is ${id}`);
+    console.log(`and headers are ${JSON.stringify(config)}`);
+    console.groupEnd();
     axios
-        .delete(`/api/items/${id}`)
+        .delete(`/api/items/${id}`, config)
         .then( res =>
             dispatch({
                 type: DELETE_ITEM,

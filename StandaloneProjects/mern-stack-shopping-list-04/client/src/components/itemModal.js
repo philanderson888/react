@@ -31,8 +31,10 @@ class ItemModal extends Component {
         const newItem = {
             name: this.state.name
         }
+        console.group(`attempting to POST a new item ${JSON.stringify(newItem)}`);
         // add item via addItem action
         this.props.addItem(newItem);
+        console.groupEnd('closing modal')
         // close modal
         this.toggle();
     }

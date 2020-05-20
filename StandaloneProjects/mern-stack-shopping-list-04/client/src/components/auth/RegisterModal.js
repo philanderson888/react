@@ -48,14 +48,19 @@ class RegisterModal extends Component {
             }
         }
         console.groupEnd();
-        // if authenticated close modal
+        // if the modal is open
+        console.group(`is the modal open?  ${this.state.modal}?  If so we need to close it after successful registration`)
         if(this.state.modal){
+            // if authenticated close modal
+            console.log(`did we register successfully ie get authenticated?  Let's check - ${isAuthenticated}`);
             if(isAuthenticated){
                 this.toggle();
             }
         }
+        console.groupEnd();
     }
     toggle = () => {
+        console.log(`toggling the modal and clearing any error messages`);
         this.props.clearErrors();
         this.setState({
             modal: !this.state.modal
@@ -68,7 +73,10 @@ class RegisterModal extends Component {
     onSubmit = (e) => {
         e.preventDefault();
         const { name, email, password } = this.state;
+        console.group(`this.state = ${JSON.stringify({name,email,password})}`);
         const newUser = { name, email, password };
+        console.log(`new user = ${JSON.stringify(newUser)}`);
+        console.groupEnd();
         // try to register new user
         this.props.register(newUser);
     }

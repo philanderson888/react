@@ -132,6 +132,11 @@
     - [Create function inside src\actions\authActions.js](#create-function-inside-srcactionsauthactionsjs)
     - [update onSubmit in RegisterModal.js](#update-onsubmit-in-registermodaljs)
     - [display error to user on fail to submit](#display-error-to-user-on-fail-to-submit)
+    - [Getting Tokens Working](#getting-tokens-working)
+  - [Log Out in src\components\auth\Logout.js](#log-out-in-srccomponentsauthlogoutjs)
+  - [Log out in `authActions.js`](#log-out-in-authactionsjs)
+    - [Add Logout To AppNavbar.js](#add-logout-to-appnavbarjs)
+  - [Finish the register and logout all working fine!](#finish-the-register-and-logout-all-working-fine)
 
 
 ## Author
@@ -3091,8 +3096,175 @@ export default connect(mapStateToProps, { register })(RegisterModal);
 
 
 
+### Getting Tokens Working
 
+I had to add in some logic to pass in the tokens into the headers.
 
+For example itemActions.js
+
+```js
+import axios from 'axios'
+import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from './types';
+import { tokenConfig } from './authActions'
+// dispatch sends the type along with the request for data
+export const getItems = () => dispatch => {
+    dispatch(setItemsLoading());
+    axios
+        .get('./api/items')
+        .then( res => 
+            dispatch({
+                type: GET_ITEMS,
+                payload: res.data
+            })
+        )        
+}
+// res.data is the new item 
+export const addItem = (item) => dispatch => {
+    const config = {
+        headers: {
+            "x-auth-token" : localStorage.getItem('token')
+        }
+    }
+    console.log(`attempting to POST in itemActions.js ie item is ${JSON.stringify(item)} 
+            and headers are ${JSON.stringify(config)}}`)
+    axios
+        .post('/api/items', item, config)
+        .then( res => 
+            dispatch({
+                type: ADD_ITEM,
+                payload: res.data
+            })
+        )
+}
+export const deleteItem = (id) => dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-auth-token" : localStorage.getItem('token')
+        }
+    }
+    console.group(`attempting to DELETE AN ITEM in itemActions.js ie item ID is ${id}`)
+    console.log(`and headers are ${JSON.stringify(config)}`);
+    console.groupEnd();
+    axios
+        .delete(`/api/items/${id}`, config)
+        .then( res =>
+            dispatch({
+                type: DELETE_ITEM,
+                payload: id
+            })
+        )
+}
+export const setItemsLoading = () => {
+    return {
+        type: ITEMS_LOADING
+    }
+}
+```
+
+Now I think all I need are the logout and login buttons and then we have finished the app completely!!! Happy days!!!
+
+## Log Out in src\components\auth\Logout.js
+
+The next thing is to get us to log out.
+
+```js
+import React, { Component, Fragment } from 'react';
+import { NavLink } from 'reactstrap';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/authActions';
+
+export class Logout extends Component {
+    static propTypes = {
+        logout: this.propTypes.func.isRequired
+    };
+    render(){
+        return (
+            <Fragment>
+                <NavLink onClick={this.props.logout} href="#" />
+            </Fragment>
+        );
+    }
+}
+export default connect( null , { logout })(Logout);
+```
+
+## Log out in `authActions.js`
+
+```js
+// Logout User
+export const logout = () => {
+    return {
+        type: LOGOUT_SUCCESS
+    }
+}
+```
+
+### Add Logout To AppNavbar.js
+
+```js
+import React, { Component } from 'react'
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    Container
+} from 'reactstrap'
+import RegisterModal from './auth/RegisterModal'
+import Logout from './auth/Logout';
+class AppNavbar extends Component {
+    state = {
+        isOpen:false
+    }
+    toggle = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
+    // mb-5 is margin-bottom:5 below the navbar
+    // ml-auto aligns links to right
+    render(){
+        return(
+            <div>
+            <Navbar color="dark" dark expand="sm" className="mb-5" >
+                <Container>
+                    <NavbarBrand href="/">ShoppingList</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar >
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <RegisterModal />
+                            </NavItem>
+                            <NavItem>
+                                <Logout />
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Container>
+            </Navbar>
+        </div>
+        )
+    }
+}
+export default AppNavbar
+```
+
+## Finish the register and logout all working fine!
+
+I have now got the register and the logout all working fine.
+
+Just beware I think I have copied some incorrect versions of files above, with tiny tweaks needed, so I might need to delete the lot of them and just write over them with correct versions.
+
+But I have tweaked so many files I am not sure if it is worth putting the code in this readme at the moment.  Maybe I can come back and tidy up later on closer analysis.  
+
+But I have done well so far.
+
+I think this would be a great place to pause and can I now add in the login function as well???
+
+Yes, let's do this in the final version 5 of this repo!
 
 
 
