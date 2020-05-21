@@ -1,0 +1,4 @@
+{
+    "testKey": "testValue",
+    "jwtSecret": "sl_myJwtSecret"
+}
