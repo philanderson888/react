@@ -140,6 +140,19 @@
   - [Login a Registered User  in components\auth\LoginModal.js](#login-a-registered-user-in-componentsauthloginmodaljs)
   - [Add LoginModal to AppNavbar.js](#add-loginmodal-to-appnavbarjs)
   - [Now create the action in `authActions`](#now-create-the-action-in-authactions)
+    - [Now call the action in `auth\LoginModal.js`](#now-call-the-action-in-authloginmodaljs)
+  - [It's working !](#its-working)
+  - [Change the menu to only have `login` or `logout` because both are displaying right now at the same time.](#change-the-menu-to-only-have-login-or-logout-because-both-are-displaying-right-now-at-the-same-time)
+    - [Import the `auth` object into AppNavbar.js so we know when user is authenticated or not](#import-the-auth-object-into-appnavbarjs-so-we-know-when-user-is-authenticated-or-not)
+    - [Now display `Logout` or `Login` depending on auth state in AppNavbar.js](#now-display-logout-or-login-depending-on-auth-state-in-appnavbarjs)
+  - [Add a welcome message in AppNavbar.js](#add-a-welcome-message-in-appnavbarjs)
+  - [App is finished!!!!  I think !!!](#app-is-finished-i-think)
+  - [Future developments](#future-developments)
+  - [itemAction.js - upgrading the way we pass in the token](#itemactionjs---upgrading-the-way-we-pass-in-the-token)
+  - [Touch up the app to change a few display items depending on logged in status](#touch-up-the-app-to-change-a-few-display-items-depending-on-logged-in-status)
+    - [itemModal.js to amend the button : bring in the state.auth.isAuthenticated](#itemmodaljs-to-amend-the-button--bring-in-the-stateauthisauthenticated)
+    - [Also touch up ShoppingList.js to show the auth state](#also-touch-up-shoppinglistjs-to-show-the-auth-state)
+  - [Finished](#finished)
 
 
 ## Author
@@ -3428,14 +3441,412 @@ export default AppNavbar
 ## Now create the action in `authActions`
 
 ```js
+// Login
+// using {} destructures an object
+export const login = ({ email, password}) => dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    // request body
+    // res.data has user and token 
+    // use returnErrors method in actions\errorActions 
+    const body = JSON.stringify({ email, password });
+    axios.post ('/api/auth', body, config)
+        .then(res => dispatch({
+            type: LOGIN_SUCCESS,
+            payload: res.data
+        }))
+        .catch(err => {
+            dispatch (returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
+            dispatch({
+                type: LOGIN_FAIL
+            });
+        })
+}
+```
 
+### Now call the action in `auth\LoginModal.js`
+
+```js
+onSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = this.state;
+    const user = {
+        email, 
+        password
+    };
+    // try to login
+    this.props.login(user);
+}
+```
+
+## It's working !
+
+Finally everything is WORKING!!!!
+
+HAPPY!!!
+
+1. MongoDB 
+2. Shopping list items in DB
+3. API to read shopping list items with GET
+4. API to POST new items
+5. API to DELETE items
+6. API to POST new user 
+7. API to POST a LOGIN
+8. API to RETURN A JWT token on REGISTRATION
+9. API to RETURN A JWT token on LOGIN
+10. API to expose GET shopping list items without authentication
+11. API to expose POST and DELETE shopping list items only when authenticated otherwise return 401 unauthorized error
+12. React front end to GET shopping list items unauthenticated
+13. React front end to POST a new user
+14. React front end to access the returned token and store the token in localStorage
+15. React front end to use the token to POST new shopping list items as authenticated user
+16. React front end to DELETE shopping list items as authenticatd user
+17. React front end to LOGOUT a user 
+18. React front end to LOGIN a user 
+19. React front end to POST and DELETE after LOGIN as well as REGISTRATION
+20. Correct error messages POSTed back to React Front End ie
+    1.  Blank login fields (username or password)
+    2.  Invalid email
+    3.  Invalid password
+
+Done!
+
+Only thing lacking is
+
+1. Deployment only half works (the API part) to Heroku
+
+Future development
+
+1. Add PUT update ie EDIT shopping list item on page and update the item
+
+## Change the menu to only have `login` or `logout` because both are displaying right now at the same time.  
+
+### Import the `auth` object into AppNavbar.js so we know when user is authenticated or not
+
+```js
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+class AppNavbar extends Component {
+    static propTypes = {
+        auth: PropTypes.object.isRequired
+    }
+}
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(mapStateToProps, null)(AppNavbar);
+```
+
+### Now display `Logout` or `Login` depending on auth state in AppNavbar.js
+
+```js
+import React, { Component, Fragment } from 'react'
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, Container
+} from 'reactstrap'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import RegisterModal from './auth/RegisterModal'
+import LoginModal from './auth/LoginModal'
+import Logout from './auth/Logout';
+class AppNavbar extends Component {
+    state = {
+        isOpen:false
+    }
+    static propTypes = {
+        auth: PropTypes.object.isRequired
+    }
+    toggle = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
+    // mb-5 is margin-bottom:5 below the navbar
+    // ml-auto aligns links to right
+    // get { isAuthenticated, user } items from const initialState in `authReducer.js`
+    // authorised user can log out
+    // guest user can register or log in
+    render(){
+        const { isAuthenticated, user  } = this.props.auth;
+        const authLinks = (
+            <Fragment>
+                <NavItem>
+                    <Logout />
+                </NavItem>
+            </Fragment>
+        );
+        const guestLinks = (
+            <Fragment>
+                <NavItem>
+                    <RegisterModal />
+                </NavItem>
+                <NavItem>
+                    <LoginModal />
+                </NavItem>
+            </Fragment>
+        );
+        return(
+            <div>
+                <Navbar color="dark" dark expand="sm" className="mb-5" >
+                    <Container>
+                        <NavbarBrand href="/">ShoppingList</NavbarBrand>
+                        <NavbarToggler onClick={this.toggle} />
+                        <Collapse isOpen={this.state.isOpen} navbar >
+                            <Nav className='ml-auto' navbar>
+                                { isAuthenticated ? authLinks : guestLinks }
+                            </Nav>
+                        </Collapse>
+                    </Container>
+                </Navbar>
+            </div>
+        )
+    }
+}
+const mapStateToProps = state =>({
+    auth: state.auth
+});
+export default connect(mapStateToProps, null)(AppNavbar);
+```
+
+And now the Register and Login buttons appear for guest users, and the Logout button appears for authenticated users!  Wow!
+
+
+## Add a welcome message in AppNavbar.js
+
+```js
+const authLinks = (
+    <Fragment>
+        <span className="navbar-text mr-3">
+            <strong>
+                { user ? `Welcome ${user.name}` : ''  }
+            </strong>
+        </span>
+        <NavItem>
+            <Logout />
+        </NavItem>
+    </Fragment>
+);
+```
+
+## App is finished!!!!  I think !!!
+
+## Future developments
+
+1. Testing
+2. Edit shopping list item if logged in.
+
+
+## itemAction.js - upgrading the way we pass in the token
+
+```js
+import axios from 'axios'
+import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from './types';
+import { tokenConfig } from './authActions';
+import { returnErrors } from './errorActions';
+// dispatch sends the type along with the request for data
+export const getItems = () => dispatch => {
+    dispatch(setItemsLoading());
+    axios
+        .get('./api/items')
+        .then( res => 
+            dispatch({
+                type: GET_ITEMS,
+                payload: res.data
+            }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));       
+}
+// res.data is the new item 
+export const addItem = (item) => dispatch => {
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-auth-token" : localStorage.getItem('token')
+        }
+    }
+    console.log(`attempting to POST in itemActions.js ie item is ${JSON.stringify(item)} 
+            and headers are ${JSON.stringify(config)}}`)
+    axios
+        .post('/api/items', item, config)
+        .then( res => 
+            dispatch({
+                type: ADD_ITEM,
+                payload: res.data
+            }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));       
+        
+}
+export const deleteItem = (id) => (dispatch, getState) => {
+    console.group(`attempting to DELETE AN ITEM in itemActions js ie item ID is ${id}`);
+    console.log(`and headers are ${JSON.stringify(tokenConfig(getState))}`);
+    console.groupEnd();
+    axios
+        .delete(`/api/items/${id}`, tokenConfig(getState))
+        .then( res =>
+            dispatch({
+                type: DELETE_ITEM,
+                payload: id
+            }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));       
+}
+export const setItemsLoading = () => {
+    return {
+        type: ITEMS_LOADING
+    }
+}
 ```
 
 
+ ## Touch up the app to change a few display items depending on logged in status 
 
+ ### itemModal.js to amend the button : bring in the state.auth.isAuthenticated
 
+ ```js
+import React, { Component } from 'react';
+import {
+    Button,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Form,
+    FormGroup,
+    Label,
+    Input
+} from 'reactstrap';
+import { connect } from 'react-redux';
+import { addItem } from '../actions/itemActions';
+import PropTypes from 'prop-types';
+// by default modal is not open so set to false
+class ItemModal extends Component {
+    state = { 
+        modal: false,
+        name: ''
+    }
+    static propTypes = {
+        isAuthenticated: PropTypes.bool
+    }
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+    // e is an event parameter 
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+    onSubmit = (e) => {
+        e.preventDefault();
+        const newItem = {
+            name: this.state.name
+        }
+        console.group(`attempting to POST a new item ${JSON.stringify(newItem)}`);
+        // add item via addItem action
+        this.props.addItem(newItem);
+        console.groupEnd('closing modal')
+        // close modal
+        this.toggle();
+    }
+    render(){
+        return(
+            <div>
+                { this.props.isAuthenticated 
+                    ? 
+                    <Button color="dark" style={{marginBottom:'2rem'}} onClick={this.toggle}>Add Item</Button>
+                    :
+                    <h4 className="mb-3 ml-4">Please log in to manage items</h4>
+                }            
+                <Modal isOpen={this.state.modal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>Add To Shopping List</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.onSubmit}>
+                            <FormGroup>
+                                <Label for="item">Item</Label>
+                                {/* name matches field from state */}
+                                {/* onChange fired on every keystroke */}
+                                <Input type="text" name="name" placeholder="Add shopping item"
+                                   onChange={this.onChange} />
+                                   <Button color="dark" block style={{ marginTop:'2rem' }}  >Add New Item</Button>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
+const mapStateToProps = state => ({
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
+});
+export default connect(mapStateToProps, { addItem })(ItemModal);
+ ```
 
+### Also touch up ShoppingList.js to show the auth state
 
+```js
+import React, { Component } from 'react'
+import { Container, ListGroup, ListGroupItem,Button } from 'reactstrap'
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { connect } from 'react-redux';
+import { getItems, deleteItem, addItem } from '../actions/itemActions';
+import PropTypes from 'prop-types';
+// uuid generates id
+class ShoppingList extends Component {
+    static propTypes = {
+        getItem: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired,
+        isAuthenticated: PropTypes.bool
+    };
+    componentDidMount(){
+        this.props.getItems();
+    }
+    onDeleteClick = (id) => {
+        this.props.deleteItem(id);
+    };
+    // pull out items from this.state and put it into an object
+    // if(name) checks it item is present in field
+    // ... is spread operator which I think picks up values from another array and inserts them here 
+    render(){
+        // item is whole object
+        // items is array within item!?!?!    ie  this.props.item.items
+        const { items } = this.props.item;
+        return(
+            <Container>
+                <ListGroup>
+                    <TransitionGroup className="shopping-list">
+                        {items.map( ({_id,name}) => (
+                            <CSSTransition key={_id} timeout={500} classNames="fade">
+                                <ListGroupItem>
+                                    {/* delete button deletes item by creating a new array from every item */}
+                                    {/* which does not map deleted item */}
+                                    { this.props.isAuthenticated 
+                                        ? <Button className="remove-btn" color="danger" size="sm" 
+                                              onClick={this.onDeleteClick.bind(this,_id)}>&times;
+                                            </Button>
+                                        : null
+                                    }
+                                    {name}
+                                </ListGroupItem>
+                            </CSSTransition>
+                        ))}
+                    </TransitionGroup>
+                </ListGroup>
+            </Container>
+        );
+    }
+}
+const mapStateToProps = (state) => ({
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
+});
+export default connect(mapStateToProps, { getItems, addItem, deleteItem })(ShoppingList);
+
+```
+
+## Finished
 
 
 

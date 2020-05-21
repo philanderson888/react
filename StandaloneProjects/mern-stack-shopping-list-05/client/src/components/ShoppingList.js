@@ -6,11 +6,14 @@ import { getItems, deleteItem, addItem } from '../actions/itemActions';
 import PropTypes from 'prop-types';
 // uuid generates id
 class ShoppingList extends Component {
-
+    static propTypes = {
+        getItem: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired,
+        isAuthenticated: PropTypes.bool
+    };
     componentDidMount(){
         this.props.getItems();
     }
-
     onDeleteClick = (id) => {
         this.props.deleteItem(id);
     };
@@ -30,12 +33,12 @@ class ShoppingList extends Component {
                                 <ListGroupItem>
                                     {/* delete button deletes item by creating a new array from every item */}
                                     {/* which does not map deleted item */}
-                                    <Button
-                                        className="remove-btn"
-                                        color="danger"
-                                        size="sm"
-                                        onClick={this.onDeleteClick.bind(this,_id)}
-                                    >&times;</Button>
+                                    { this.props.isAuthenticated 
+                                        ? <Button className="remove-btn" color="danger" size="sm" 
+                                              onClick={this.onDeleteClick.bind(this,_id)}>&times;
+                                            </Button>
+                                        : null
+                                    }
                                     {name}
                                 </ListGroupItem>
                             </CSSTransition>
@@ -46,11 +49,8 @@ class ShoppingList extends Component {
         );
     }
 }
-ShoppingList.propTypes = {
-    getItem: PropTypes.func.isRequired,
-    item: PropTypes.object.isRequired
-}
 const mapStateToProps = (state) => ({
-    item: state.item
+    item: state.item,
+    isAuthenticated: state.auth.isAuthenticated
 });
 export default connect(mapStateToProps, { getItems, addItem, deleteItem })(ShoppingList);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
-import {    USER_LOADED, USER_LOADING, AUTH_ERROR, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
+import {    USER_LOADED, USER_LOADING, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, REGISTER_SUCCESS, REGISTER_FAIL
 } from './types'
 // check token and load user
 // whenever we need the token call tokenConfig(getState) which gets token
@@ -59,7 +59,7 @@ export const login = ({ email, password}) => dispatch => {
     // request body
     // res.data has user and token 
     // use returnErrors method in actions\errorActions 
-    const body = JSON.stringify({name, email, password});
+    const body = JSON.stringify({ email, password });
     axios.post ('/api/auth', body, config)
         .then(res => dispatch({
             type: LOGIN_SUCCESS,
@@ -71,7 +71,6 @@ export const login = ({ email, password}) => dispatch => {
                 type: LOGIN_FAIL
             });
         })
-
 }
 
 // Logout User
