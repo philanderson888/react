@@ -1,9 +1,22 @@
-# ReactJS 
+# React
+
+This is a teaching repository for React created by Facebook.
+
+The repo is sorted into [single file react projects](SingleHtmlFiles) which can be run as standalone files ie they have React imported as a CDN into a single HTML file.  
+
+Also I have a much more complex set of standalone projects built with the `create-react-app` [here](StandaloneProjects).
+
+Happy learning!
+
+Phil Anderson
 
 ## Contents
 
-- [ReactJS](#reactjs)
+- [React](#react)
   - [Contents](#contents)
+  - [Single File React HTML Pages](#single-file-react-html-pages)
+  - [React Projects Built With `create-react-app`](#react-projects-built-with-create-react-app)
+- [React Learning](#react-learning)
   - [Introduction](#introduction)
   - [Resources](#resources)
   - [Background](#background)
@@ -11,9 +24,12 @@
   - [Component (think of as a class)](#component-think-of-as-a-class)
     - [CreateElement From Component (think of instantiating a class)](#createelement-from-component-think-of-instantiating-a-class)
     - [Render Method](#render-method)
-- [Please see further details in the folders below:](#please-see-further-details-in-the-folders-below)
-  - [Single Html Files](#single-html-files)
-  - [Standalone Projects](#standalone-projects)
+
+## [Single File React HTML Pages](SingleHtmlFiles)
+
+## [React Projects Built With `create-react-app`](StandaloneProjects)
+
+# React Learning
 
 ## Introduction
 
@@ -22,7 +38,6 @@ This repository is a combination of my own learning, also learning React from Ud
 ## Resources
 
 [reactforbeginners.com](https://reactforbeginners.com)
-
 
 ## Background
 
@@ -90,11 +105,3 @@ Create REACT ELEMENT using JSX language
 Any Javascript expression can go inside the JSX expression
 Every REACT ELEMENT is a REAL JAVASCRIPT OBJECT
 React uses these instructions to render the screen
-
-
-
-# Please see further details in the folders below:
-
-## [Single Html Files](SingleHtmlFiles)
-
-## [Standalone Projects](StandaloneProjects)
