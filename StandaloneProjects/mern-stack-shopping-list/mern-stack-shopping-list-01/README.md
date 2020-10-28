@@ -395,7 +395,7 @@ At this point we have GET POST and DELETE all working!
 
 #### server.js
 
-```
+```js
 const express = require ('express')
 const mongoose = require ('mongoose')
 const bodyParser = require ('body-parser')
