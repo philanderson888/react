@@ -56,7 +56,7 @@ const Todo = (props) => {
   return (
     <div className = 'list-item'>
       {props.content}
-      <button class="delete is-pulled-right" onClick={ () => {
+      <button className="delete is-pulled-right" onClick={ () => {
         props.onDelete(props.id)
       }}>
       </button>
@@ -78,10 +78,11 @@ class SubmitForm extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <input type='text' className='input' placeholder='Enter item' 
+          data-testid='inputBox'
           value={this.state.term}
           onChange={(e)=>this.setState({term:e.target.value})}
         />
-        <button className='button'>Submit</button>
+        <button className='button' data-testid='submitButton'>Submit</button>
       </form>
     );
   }
