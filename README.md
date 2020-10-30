@@ -9,6 +9,7 @@
   - [Standalone Projects](#standalone-projects)
   - [Resources](#resources)
   - [Introduction](#introduction)
+  - [Starter Code](#starter-code)
   - [Component (think of as a class)](#component-think-of-as-a-class)
     - [CreateElement From Component (think of instantiating a class)](#createelement-from-component-think-of-instantiating-a-class)
     - [Render Method](#render-method)
@@ -25,6 +26,9 @@
   - [createElement](#createelement)
   - [React Router](#react-router)
   - [State](#state)
+  - [State inside one component](#state-inside-one-component)
+    - [Passing state between components](#passing-state-between-components)
+  - [Buttons](#buttons)
 
 ## Overview
 
@@ -98,7 +102,53 @@ cd my-app
 npm start
 ```
 
+## Starter Code
 
+Strip back all of the React boilerplate code and just get your bare minimum
+
+```jsx
+create-react-app myapp; cd myapp;yarn start
+// remove all extra css and tests and leave 
+// index.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+// App.js
+function App() {
+  return (
+    <div>
+    </div>
+  );
+}
+export default App;
+// index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
 ## Component (think of as a class)
 
 Component
@@ -450,7 +500,326 @@ We now have perfect routing
 
 ## State
 
+[State](state/README.md)
+
+## State inside one component
+
 Props are `immutable`
 
 State is `mutable`
 
+State must be used in components declared as a `Class`
+
+Let's create state in a component
+
+```jsx
+import React from 'react'
+class State01 extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            data: "State Data"
+        }
+    }
+    render(){
+        return <div>Component To Track State showing data '{this.state.data}'</div>;
+    }
+}
+export default State01
+/*
+Component To Track State showing data 'State Data'
+*/
+```
+
+### Passing state between components
+
+Now let's create a sub-component and pass state to it
+
+```js
+create-react-app state-02;cd state-02;yarn add react-router-dom
+```
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+ReactDOM.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+We create the parent component
+
+```jsx
+import ParentComponent from 'components/ParentComponent.js'
+function App() {
+  return (
+    <div>
+      <ParentComponent />
+    </div>
+  );
+}
+export default App;
+```
+
+```jsx
+import ParentComponent from './components/ParentComponent.js'
+function App() {
+  return (
+    <div>
+      <ParentComponent />
+    </div>
+  );
+}
+export default ParentComponent;
+```
+
+```jsx
+import React from 'react';
+class ParentComponent extends React.Component {
+    render() {
+        return (<div>This is the parent component</div>);
+    }
+}
+export default ParentComponent
+/*
+This is the parent component
+*/
+```
+
+Now let's add a child component
+
+```jsx
+import React from 'react';
+import ChildComponent from './ChildComponent';
+class ParentComponent extends React.Component {
+    render() {
+        return (
+            <div>
+                This is the parent component
+                <ChildComponent />
+            </div>
+        );
+    }
+}
+export default ParentComponent
+/*
+This is the parent component
+This is the Child component
+*/
+```
+
+Now let's see if we can pass state data to the child
+
+```jsx
+import React from 'react';
+import ChildComponent from './ChildComponent';
+class ParentComponent extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            data: "This is some data"
+        }
+    }
+    render() {
+        return (
+            <div>
+                This is the parent component
+                <ChildComponent text='This is some text' />
+                <ChildComponent text={this.state.data} />
+            </div>
+        );
+    }
+}
+export default ParentComponent
+```
+
+```jsx
+import React from 'react';
+class ChildComponent extends React.Component {
+    render() {
+        return (
+            <div>
+                <p>This is the Child component with data from parent - {this.props.text}</p>
+            </div>
+        );
+    }
+}
+export default ChildComponent
+/*
+This is the parent component
+This is the Child component with data from parent - This is some text
+This is the Child component with data from parent - This is some data
+*/
+```
+
+So we are now able to pass data or 'state' from one component down to another one.
+
+The idea is that if the state updates, then so does the state in the child component.
+
+Let's see if we can set this up by clicking a button in the parent to change state and see what happens in the child component display
+
+```js
+create-react-app state-03;cd state-03;yarn start
+// remove all extra css and tests
+// App.js
+function App() {
+  return (
+    <div>
+    </div>
+  );
+}
+export default App;
+// index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Now if we push some data from `Parent`
+
+```jsx
+import React from 'react'
+import Child from './Child'
+class Parent extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            data: "here is some data"
+        }
+    }
+    render(){
+        return(
+            <>
+                <h2>Parent Component</h2>
+                <Child data={this.state.data}/>
+            </>
+        );
+    }
+}
+export default Parent
+```
+
+to Child
+
+```jsx
+import React from 'react'
+class Child extends React.Component {
+    render(){
+        return(
+            <>
+                <p>Child Component</p>
+                <p>{this.props.data}</p>
+            </>
+        );
+    }
+}
+export default Child
+```
+
+This is all working fine
+
+```jsx
+/*
+Parent Component
+Child Component
+here is some data
+*/
+```
+
+So what now if we add a button in the parent to change the data in the parent and see if this propogates down to the child immediately.
+
+We use the `setState` method to set the state, we don't call it directly
+
+```jsx
+import React from 'react'
+import Child from './Child'
+class Parent extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            data: "here is some data",
+            isToggleOn:true
+        }
+        this.changeState = this.changeState.bind(this);
+    }
+    changeState() {
+        this.setState(state=>({
+            data: state.data + " some data, ",
+            isToggleOn:!state.isToggleOn
+        }))
+    } 
+    render(){
+        return(
+            <>
+                <h2>Parent Component</h2>
+                <Child data={this.state.data}/>
+                <button onClick={this.changeState}>Change State {this.state.isToggleOn ? 'ON' : 'OFF'}</button>
+            </>
+        );
+    }
+}
+export default Parent
+/*
+Parent Component
+Child Component
+here is some data
+Change State ON
+
+becomes
+
+Parent Component
+Child Component
+here is some data some data,
+Change State OFF
+*/
+```
+
+
+
+## Buttons
+
+When we click a button the code to trigger an event is as follows
+
+```jsx
+import React from 'react'
+import Child from './Child'
+class Parent extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            data: "here is some data",
+            isToggleOn:true
+        }
+        this.changeState = this.changeState.bind(this);
+    }
+    changeState() {
+        this.setState(state=>({
+            data: state.data + "some data, ",
+            isToggleOn:!state.isToggleOn
+        }))
+    } 
+    render(){
+        return(
+            <>
+                <h2>Parent Component</h2>
+                <Child data={this.state.data}/>
+                <button onClick={this.changeState}>Change State {this.state.isToggleOn ? 'ON' : 'OFF'}</button>
+            </>
+        );
+    }
+}
+export default Parent
+```
