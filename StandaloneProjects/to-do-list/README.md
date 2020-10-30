@@ -7,6 +7,8 @@
   - [Introduction](#introduction)
   - [Getting started](#getting-started)
   - [Tests](#tests)
+  - [To Do List version 2](#to-do-list-version-2)
+  - [Set state](#set-state)
 
 ## Introduction
 
@@ -536,3 +538,186 @@ test('add extra todo item', () => {
   expect(todoItem).toBeInTheDocument();
 });
 ```
+
+## To Do List version 2
+
+OK so the first version I have created and all works well, so am very pleased with it.
+
+Just want to work it through again and try and add some of my own touches to it, perhaps adding editing function as well.
+
+```js
+create-react-app to-do-list-02
+cd to-do-list-02
+yarn add bulma bulmaswatch node-sass
+```
+
+Clear out the react boilerplate code
+
+index.js
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+App.js
+
+```js
+import logo from './logo.svg';
+import './App.css';
+function App() {
+  return (
+    <div className="App">
+      <header className="AppHeader">
+        <h1>To Do List</h1>
+      </header>
+    </div>
+  );
+}
+export default App;
+```
+
+App.css
+
+```css
+.App{
+  width:80vw;
+  margin:auto;
+}
+.AppHeader{
+  margin-top:5vh;
+}
+```
+
+## Set state
+
+Here I am going to try and read in the initial state of the app from an API online
+
+```js
+fetch('https://jsonplaceholder.typicode.com/todos/1')
+  .then(response => response.json())
+  .then(json => console.log(json))
+```
+
+OK so here is `App.js` reading in data
+
+```jsx
+import './App.css';
+function App() {
+  console.clear();
+  const state = { 
+    title: "state",
+    tasks: [] 
+  }
+  fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
+    .then(json => {
+      for (let i=0; i<3; i++){
+        state.tasks.push(json[i])
+      }
+      console.log(state)
+    });
+  return (
+    <div className="App">
+      <header className="AppHeader">
+        <h1>To Do List</h1>
+      </header>
+    </div>
+  );
+}
+export default App;
+/*
+{
+  tasks:[
+    0: {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+    1: {userId: 1, id: 2, title: "quis ut nam facilis et officia qui", completed: false}
+    2: {userId: 1, id: 3, title: "fugiat veniam minus", completed: false}
+  ],
+  title: "state"
+}
+*/
+```
+
+We can display our todos directly on the screen
+
+```jsx
+import './App.css';
+import ReactDOM from 'react-dom'
+function App() {
+  console.clear();
+  const state = { 
+    title: "Here are some items to complete",
+    tasks: ['This is a task','and this is another task'] ,
+  }
+  return (
+    <div className="App">
+      <header className="AppHeader">
+        <h1>To Do List</h1>
+        <strong>{state.title}</strong>
+        <br />
+        <ul>
+        {state.tasks.map(task=>(
+          <>
+            <li>{task}</li>
+          </>
+        ))}
+        </ul>
+      </header>
+    </div>
+  );
+}
+export default App;
+/*
+To Do List
+Here are some items to complete
+- This is a task
+- and this is another task
+*/
+```
+
+We can also call the display as a function
+
+```jsx
+import './App.css';
+import ReactDOM from 'react-dom'
+function App() {
+  console.clear();
+  const state = { 
+    title: "Here are some items to complete",
+    tasks: ['This is a task','and this is another task'] ,
+  }
+  
+  function displayToDos(){
+      return(
+        <ul>
+          {state.tasks.map(todo=>(
+            <li>{todo}</li>
+          ))}
+        </ul>
+      );
+  }
+  return (
+    <div className="App">
+      <header className="AppHeader">
+        <h1>To Do List</h1>
+        <strong>{state.title}</strong>
+        <br />
+        {displayToDos()}
+      </header>
+    </div>
+  );
+}
+export default App;
+```
+
+Finally we can display them as a component
+

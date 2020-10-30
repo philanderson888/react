@@ -30,6 +30,8 @@ Creating an starter template in React with Bulma CSS
 
 ## ToDo List
 
+[to-do-list](to-do-list/README.md)
+
 Building a simple ToDo list application in React
 
 Using this tutorial https://medium.com/javascript-in-plain-english/build-a-simple-todo-app-with-react-561579b39ad1
