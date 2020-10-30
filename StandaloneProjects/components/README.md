@@ -1,4 +1,4 @@
-# Component
+# Components
 
 ## Component 01
 
@@ -199,4 +199,110 @@ function App(data) {
   );
 }
 export default App;
+```
+
+but we also see it as a class so let's make it happen!
+
+Let's create it
+
+```js
+create-react-app component-05-component-as-class;cd component-05-component-as-class;yarn start
+```
+
+Remove all of the extra files not needed
+
+```jsx
+function App() {
+  return (
+    <>
+    </>
+  );
+}
+export default App;
+```
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Add firstly a function component
+
+```jsx
+function ComponentA(){
+    return(
+        <div>
+            This is component A
+        </div>
+    );
+}
+export default ComponentA
+```
+
+And now a class component
+
+```jsx
+import React from 'react'
+class ComponentB extends React.Component {
+    render() {
+        return <div>This is component B</div>
+    }
+}
+export default ComponentB
+```
+
+And display them both
+
+```jsx
+import ComponentA from './ComponentA'
+import ComponentB from './ComponentB'
+function App() {
+  return (
+    <>
+      This is a react app!
+      <ComponentA name='componentA' />
+      <ComponentB name='componentB' />
+    </>
+  );
+}
+export default App;
+```
+
+Now pass data to them both
+
+```jsx
+function ComponentA(props){
+    return(
+        <div>
+            This is component A displaying props as '{props.name}'
+        </div>
+    );
+}
+export default ComponentA
+```
+
+```jsx
+import React from 'react'
+class ComponentB extends React.Component {
+    render() {
+        return <div>This is component B displaying props as '{this.props.name}'</div>
+    }
+}
+export default ComponentB
+```
+which now renders as
+
+```jsx
+/*
+This is a react app!
+This is component A displaying props as 'componentA'
+This is component B displaying props as 'componentB'
+*/
 ```
