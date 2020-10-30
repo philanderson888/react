@@ -14,6 +14,8 @@
     - [Render Method](#render-method)
     - [Rendering An Element In Raw HTML](#rendering-an-element-in-raw-html)
   - [Elements](#elements)
+  - [Render Method](#render-method-1)
+  - [React Clock](#react-clock)
   - [Components](#components)
   - [Display Component](#display-component)
   - [Multiple Components](#multiple-components)
@@ -21,8 +23,8 @@
   - [Passing Data To Components](#passing-data-to-components)
   - [Component As A Class](#component-as-a-class)
   - [createElement](#createelement)
-  - [Render Method](#render-method-1)
-  - [React Clock](#react-clock)
+  - [React Router](#react-router)
+  - [State](#state)
 
 ## Overview
 
@@ -51,6 +53,8 @@ Also I have a much more complex set of standalone projects built with the `creat
 [Build This Game On React Docs Tutorial](https://reactjs.org/tutorial/tutorial.html)
 
 [FreeCodeCamp React Tutorial](https://www.freecodecamp.org/news/all-the-fundamental-react-js-concepts-jammed-into-this-single-medium-article-c83f9b53eac2/)
+
+Free React Course https://scrimba.com/learn/learnreact
 
 [Live Play Around With React And Learn Basics - All In Browser](https://jscomplete.com/playground)
 
@@ -166,6 +170,63 @@ or be user-defined with `props` passed to it
 ```jsx
 const element = <Welcome name="Phil" />;
 ```
+
+
+
+## Render Method
+
+Returns a description of what you want to render
+
+Returns a REACT ELEMENT which is a lightweight description of what to render
+
+Create REACT ELEMENT using JSX language
+
+```js
+return React.createElement('div', 
+  {className: 'shopping-list'},
+  React.createElement('h1', ...),
+  React.createElement('ul', ...)
+);
+```
+
+Any Javascript expression can go inside the JSX expression
+
+Every REACT ELEMENT is a REAL JAVASCRIPT OBJECT
+
+React uses these instructions to render the screen
+
+
+
+
+## React Clock
+
+Here is a basic clock
+
+```js
+function tick() {
+  const element = (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+    </div>
+  );
+  ReactDOM.render(element, document.getElementById('root'));
+}
+
+setInterval(tick, 1000);
+```
+
+The setInterval function calls function tick() every second.
+
+This function tick() calls ReactDOM.render() so this gets called every second.
+
+It renders the chosen element, in this case `hello world` plus a time string, to the screen at the position of the `div` element with id `root`.
+
+React will compare the previous and current rendition of the screens in the virtual DOMs which it creates. It will then only render the changes, making for a more efficient screen re-render.
+
+We can see this visually by `inspecting` the clock with Chrome Dev Tools and expanding to see the relevant HTML element. We can see the rest of the DOM is static but this little bit updates on every clock tick.
+
+
 
 
 ## Components
@@ -287,56 +348,109 @@ return React.createElement('div',
 );
 ```
 
-## Render Method
+## React Router
 
-Returns a description of what you want to render
+See [router](router) for examples on routing
 
-Returns a REACT ELEMENT which is a lightweight description of what to render
-
-Create REACT ELEMENT using JSX language
+We can now route between components!
 
 ```js
-return React.createElement('div', 
-  {className: 'shopping-list'},
-  React.createElement('h1', ...),
-  React.createElement('ul', ...)
+create-react-app router-01;cd router-01;yarn start
+yarn add react-router-dom
+```
+
+Remove all extra data and add 2 components
+
+```jsx
+import Component01 from './components/Component01'
+import Component02 from './components/Component02'
+function App() {
+  return (
+    <div>
+      <h2>React Routing</h2>
+      <Component01 />
+      <Component02 />
+    </div>
+  );
+}
+export default App;
+```
+
+```jsx
+import React from 'react';
+class Component01 extends React.Component {
+    render() {
+        return(<div>Component01</div>);  
+    }
+}
+export default Component01    
+```
+
+Now can we add routing between those components?
+
+index.js
+
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+ReactDOM.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 ```
 
-Any Javascript expression can go inside the JSX expression
+App.js
 
-Every REACT ELEMENT is a REAL JAVASCRIPT OBJECT
-
-React uses these instructions to render the screen
-
-
-
-
-
-## React Clock
-
-Here is a basic clock
-
-```js
-function tick() {
-  const element = (
+```jsx
+import React from 'react';
+import { Link, Route, Switch } from 'react-router-dom';
+import Home from './components/Home'
+import Component01 from './components/Component01'
+import Component02 from './components/Component02'
+function App() {
+  return (
     <div>
-      <h1>Hello, world!</h1>
-      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+      <h2>React Routing</h2>
+      <Link to="/">Home</Link>&nbsp;|&nbsp;
+      <Link to="/component01">Component01</Link>&nbsp;|&nbsp;
+      <Link to="/component02">Component02</Link>
+      <br /><br />
+      <Switch>
+        <Route path='/' component={Home} exact />
+        <Route path='/component01' component={Component01} />
+        <Route path='/component02' component={Component02} />
+      </Switch>
     </div>
   );
-  ReactDOM.render(element, document.getElementById('root'));
 }
-
-setInterval(tick, 1000);
+export default App;
 ```
 
-The setInterval function calls function tick() every second.
+Home component etc
 
-This function tick() calls ReactDOM.render() so this gets called every second.
+```jsx
+import React from 'react'
+class Home extends React.Component {
+    render() {
+        return(<div>Home</div>)
+    }
+}
+export default Home
+```
 
-It renders the chosen element, in this case `hello world` plus a time string, to the screen at the position of the `div` element with id `root`.
+We now have perfect routing
 
-React will compare the previous and current rendition of the screens in the virtual DOMs which it creates. It will then only render the changes, making for a more efficient screen re-render.
+<p align="center"><img src="images/../routing.png" /></p>
 
-We can see this visually by `inspecting` the clock with Chrome Dev Tools and expanding to see the relevant HTML element. We can see the rest of the DOM is static but this little bit updates on every clock tick.
+## State
+
+Props are `immutable`
+
+State is `mutable`
+
