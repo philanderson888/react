@@ -32,6 +32,9 @@
     - [Alter Child State From Parent](#alter-child-state-from-parent)
   - [Alter Parent State From Child](#alter-parent-state-from-child)
   - [Buttons](#buttons)
+  - [API Javascript Fetch](#api-javascript-fetch)
+  - [Resources](#resources-1)
+  - [Javascript Fetch](#javascript-fetch)
 
 ## Overview
 
@@ -1119,4 +1122,101 @@ class Parent extends React.Component {
     }
 }
 export default Parent
+```
+
+## API Javascript Fetch
+
+Let's try and read data from an API to our react page using Javascript fetch
+
+## Resources
+
+https://www.smashingmagazine.com/2020/06/rest-api-react-fetch-axios/
+
+https://www.youtube.com/watch?v=T3Px88x_PsA&ab_channel=BenAwad
+
+https://api.randomuser.me
+
+## Javascript Fetch
+
+Using https://reactjs.org/docs/faq-ajax.html as a lead document
+
+```js
+create-react-app api-fetch-01;cd api-fetch-01
+// strip out to bare minimum
+```
+
+```jsx
+import React from 'react'
+class Parent extends React.Component {
+    constructor(){
+        super()
+        this.state={
+            error:null,
+            isLoaded:false,
+            todos:[]
+        }
+    }
+    componentDidMount(){
+        fetch('https://jsonplaceholder.typicode.com/todos')
+        .then(response => response.json())
+        .then(data => {
+            this.setState({
+                isLoaded:true,
+                todos:data
+            })
+            console.log(this.state)
+        },
+        error => {
+            this.setState({
+                isLoaded:true,
+                error
+            });
+        });
+    }
+    render(){
+        return(
+            <div>
+                This is an API client
+            </div>
+        )
+    }
+}
+export default Parent
+/*
+Object
+error: null
+isLoaded: true
+todos: Array(200)
+[0 … 99]
+0: {userId: 1, id: 1, title: "delectus aut autem", completed: false}
+1: {userId: 1, id: 2, title: "quis ut nam facilis et officia qui", completed: false}
+2: {userId: 1, id: 3, title: "fugiat veniam minus", completed: false}
+*/
+```
+
+Now to render the data also
+
+```jsx
+render(){
+    const { error, isLoaded, todos } = this.state;
+    if(error) {
+        return <div>Error: {error.message}</div>
+    } else if (!isLoaded) {
+        return <div>Loading . . . </div>
+    } else {
+        return(
+            <ul>
+                {todos.map(todo=>(
+                    <li key={todo.id}>{todo.title}</li>
+                ))}
+            </ul>
+        )    
+    }
+}
+/*
+API Client
+delectus aut autem
+quis ut nam facilis et officia qui
+fugiat veniam minus
+*/
 ```
