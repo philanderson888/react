@@ -1,5 +1,9 @@
 import React from 'react'
 class ApiPost extends React.Component {
+    constructor(){
+        super()
+        
+    }
     render(){
         return(
             <div>
