@@ -35,6 +35,8 @@
   - [API Javascript Fetch](#api-javascript-fetch)
   - [Resources](#resources-1)
   - [Javascript Fetch](#javascript-fetch)
+  - [API Post](#api-post)
+  - [API Put](#api-put)
 
 ## Overview
 
@@ -1220,3 +1222,175 @@ quis ut nam facilis et officia qui
 fugiat veniam minus
 */
 ```
+
+## API Post
+
+Now can we POST data?
+
+Let's use https://jsonplaceholder.typicode.com/users for now although I'm not sure if we can actually return a new user id
+
+First of all set up the code to read data using API Get 
+
+```jsx
+import React from 'react'
+class ApiPost extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            error:null,
+            isLoaded:false,
+            users:[]
+        }
+    }
+    componentDidMount(){
+        fetch("https://jsonplaceholder.typicode.com/users")
+            .then(response=>response.json())
+            .then(data=>{
+                this.setState({
+                    isLoaded:true,
+                    users:data
+                })
+            },
+            error=>{
+                this.setState({
+                    isLoaded:true,
+                    error
+                })
+            }
+        );
+    }
+    render(){
+        const { error, isLoaded, users } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>API Post New User</h2>
+                    <ul>
+                        {users.slice(0,3).map(user=>(
+                            <li key={user.id}>{user.name}</li>
+                        ))}
+                    </ul>
+                </div> 
+            )
+        }
+    }
+}
+export default ApiPost
+```
+
+Next to do a `post` we install `axios`
+
+```js
+yarn add axios
+yarn start
+```
+
+and after a lot of work we end up with a working API POST page
+
+```jsx
+import React from 'react'
+import axios from 'axios'
+class ApiPost extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            error:null,
+            isLoaded:false,
+            users:[],
+            user:null,
+            fullName:''
+        }
+    }
+    componentDidMount(){
+        fetch("https://jsonplaceholder.typicode.com/users")
+            .then(response=>response.json())
+            .then(data=>{
+                this.setState({
+                    error:null,
+                    isLoaded:true,
+                    users:data,
+                    user:null,
+                    fullName:''
+                })
+            },
+            error=>{
+                this.setState({
+                    isLoaded:true,
+                    error
+                })
+            }
+        );
+        const user = {name:"Bob"};
+        axios.post('https://jsonplaceholder.typicode.com/users', user)
+            .then(response => {
+                console.log(response);
+                console.log(response.data)
+                this.setState({ 
+                    user:response.data
+                    
+                }); 
+            });
+    }
+    onClearUsers = () => {
+        this.setState({users:[]})
+    }
+    onChangeUserName = event => {
+        this.setState({fullName:event.target.value})
+        console.log(event.target.value)
+    }
+    onAddUser = () => {
+        let user = {
+            name:this.state.fullName
+        }
+        let users = this.state.users
+        axios.post('https://jsonplaceholder.typicode.com/users', user)
+            .then(response => {
+                user = response.data
+                user.id = this.state.users.length+1
+                console.log(user)
+                users = [...this.state.users, user]
+                console.log(users)
+                this.setState({ 
+                    user,
+                    users
+                })
+            });
+
+    }
+    render(){
+        const { error, isLoaded, users } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>API Post New User</h2>
+                    <ul>
+                        {users.map(user=>(
+                            <li key={user.id}>{user.name}</li>
+                        ))}
+                    </ul>
+                    <input type="text" value={this.state.fullName} onChange={this.onChangeUserName} placeholder='Full Name' />
+                    <button type='button' onClick={this.onAddUser} disabled={!this.state.fullName}>Add User</button>
+                    <button type='button' onClick={this.onClearUsers}>Clear Users</button>
+                </div> 
+            )
+        }
+
+    }
+}
+export default ApiPost
+```
+
+## API Put
+
+Now we can look at API Put
+
+Here is a lead article (remove on implementation) https://www.robinwieruch.de/react-state-array-add-update-remove
+

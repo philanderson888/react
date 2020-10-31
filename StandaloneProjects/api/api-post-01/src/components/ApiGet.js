@@ -36,7 +36,7 @@ class APIGet extends React.Component {
                 <div>
                     <h2>API Get Users</h2>
                     <ul>
-                        {users.slice(0,3).map(user=>(
+                        {users.map(user=>(
                             <li key={user.id}>{user.name}</li>
                         ))}
                     </ul>
