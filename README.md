@@ -37,6 +37,7 @@
   - [Javascript Fetch](#javascript-fetch)
   - [API Post](#api-post)
   - [API Put](#api-put)
+  - [Async Delete](#async-delete)
 
 ## Overview
 
@@ -1390,7 +1391,186 @@ export default ApiPost
 
 ## API Put
 
-Now we can look at API Put
+Now we can look at API Put for example at https://www.robinwieruch.de/react-state-array-add-update-remove and https://www.robinwieruch.de/react-update-item-in-list
 
-Here is a lead article (remove on implementation) https://www.robinwieruch.de/react-state-array-add-update-remove
+Create a new react application
+
+```js
+create-react-app api-put-01
+cd api-put-01
+yarn add axios react-router-dom
+yarn start
+```
+
+Add in this code
+
+```jsx
+onDeleteUserSubmit = event => {
+    event.preventDefault()
+    axios.delete(`https://jsonplaceholder.typicode.com/users/${this.state.id}`)
+        .then(response=>{
+            console.log(`response has status ${response.status}`)
+            console.log(response)
+            console.log(response.data)
+            let users = this.state.users.filter(user=>{
+                return user.id != this.state.id
+            })
+            console.log(users)
+            this.setState({
+                users,
+                id:''
+            })
+        })
+}
+<form onSubmit={this.onDeleteUserSubmit}>
+    ID<input type="text" name="id" onChange={this.onDeleteUser} />
+    <button type="submit">Delete User</button>
+</form>
+```
+
+The final code for a crude delete is here
+
+```jsx
+import React from 'react'
+import axios from 'axios'
+class ApiPost extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            error:null,
+            isLoaded:false,
+            users:[],
+            user:null,
+            fullName:'',
+            id:''
+        }
+    }
+    componentDidMount(){
+        fetch("https://jsonplaceholder.typicode.com/users")
+            .then(response=>response.json())
+            .then(data=>{
+                this.setState({
+                    error:null,
+                    isLoaded:true,
+                    users:data,
+                    user:null,
+                    fullName:''
+                })
+            },
+            error=>{
+                this.setState({
+                    isLoaded:true,
+                    error
+                })
+            }
+        );
+        const user = {name:"Bob"};
+        axios.post('https://jsonplaceholder.typicode.com/users', user)
+            .then(response => {
+                console.log(response);
+                console.log(response.data)
+                this.setState({ 
+                    user:response.data
+                    
+                }); 
+            });
+    }
+    onChangeUserName = event => {
+        this.setState({fullName:event.target.value})
+        console.log(event.target.value)
+    }
+    onClearUsers = () => {
+        this.setState({users:[]})
+    }
+    onAddUser = () => {
+        let user = {
+            name:this.state.fullName
+        }
+        let users = this.state.users
+        axios.post('https://jsonplaceholder.typicode.com/users', user)
+            .then(response => {
+                user = response.data
+                user.id = this.state.users.length+1
+                console.log(user)
+                users = [...this.state.users, user]
+                console.log(users)
+                this.setState({ 
+                    user,
+                    users
+                })
+            });
+    }
+    onDeleteUser = event => {
+        this.setState({id:event.target.value})
+    }
+    onDeleteUserSubmit = event => {
+        event.preventDefault()
+        axios.delete(`https://jsonplaceholder.typicode.com/users/${this.state.id}`)
+            .then(response=>{
+                console.log(`response has status ${response.status}`)
+                console.log(response)
+                console.log(response.data)
+                let users = this.state.users.filter(user=>{
+                    return user.id != this.state.id
+                })
+                console.log(users)
+                this.setState({
+                    users,
+                    id:''
+                })
+            })
+    }
+    render(){
+        const { error, isLoaded, users } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>API Delete User</h2>
+                    <ul>
+                        {users.map(user=>(
+                            <li key={user.id}>{user.id} - {user.name}</li>
+                        ))}
+                    </ul>
+                    <input type="text" value={this.state.fullName} onChange={this.onChangeUserName} placeholder='Full Name' />
+                    <button type='button' onClick={this.onAddUser} disabled={!this.state.fullName}>Add User</button>
+                    <button type='button' onClick={this.onClearUsers}>Clear Users</button>
+                    <form onSubmit={this.onDeleteUserSubmit}>
+                        ID<input type="text" name="id" onChange={this.onDeleteUser} />
+                        <button type="submit">Delete User</button>
+                    </form>
+                </div> 
+            )
+        }
+
+    }
+}
+export default ApiDelete
+```
+
+## Async Delete
+
+We can modify the code slightly to have an async delete
+
+```jsx
+onDeleteUserSubmit = async event => {
+    event.preventDefault()
+    const response = await axios.delete(`https://jsonplaceholder.typicode.com/users/${this.state.id}`)
+    console.log(`response has status ${response.status}`)
+    console.log(response)
+    console.log(response.data)
+    let users = this.state.users.filter(user=>user.id != this.state.id)
+    console.log(users)
+    this.setState({
+        users,
+        id:'',
+        firstName:'',
+        user:null
+    })
+}
+```
+
 
