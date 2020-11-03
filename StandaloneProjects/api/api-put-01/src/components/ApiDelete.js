@@ -76,7 +76,7 @@ class ApiDelete extends React.Component {
         console.log(`response has status ${response.status}`)
         console.log(response)
         console.log(response.data)
-        let users = this.state.users.filter(user=>user.id != this.state.id)
+        let users = this.state.users.filter(user=>user.id !== parseInt(this.state.id))
         console.log(users)
         this.setState({
             users,
