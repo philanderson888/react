@@ -41,6 +41,8 @@
   - [API Delete](#api-delete)
   - [Add User With Max ID](#add-user-with-max-id)
   - [Edit User](#edit-user)
+  - [API Google Calendar](#api-google-calendar)
+  - [Getting data](#getting-data)
 
 ## Overview
 
@@ -59,6 +61,8 @@ Also I have a much more complex set of standalone projects built with the `creat
 ## Standalone Projects
 
 [React Projects Built With `create-react-app`](StandaloneProjects/README.md)
+
+[API Projects](StandaloneProjects/api/README.md)
 
 ## Resources
 
@@ -2075,3 +2079,78 @@ class ApiPut extends React.Component {
 }
 export default ApiPut
 ```
+
+
+## API Google Calendar
+
+To make an app which takes data from Google Calendar do the following
+
+1. Enable the API on Google Calendar
+2. Store ClientID and Secret in `.env` in project root prepended with `REACT_APP`
+   
+```js
+// Don't store these in production here as they are discoverable on the client by anyone!
+REACT_APP_CLIENT_ID = ...
+REACT_APP_CLIENT_SECRET = ...
+```
+3. Manage your API keys in the `google developers console` https://console.developers.google.com
+4. Experiment with the API settings using `try this api` eg for google calendar it is https://developers.google.com/calendar/v3/reference/?apix=true 
+5. Enable the `Google Calendar` API for your project
+6. Click to `Create Credentials` from a web browser
+7. Add `http://localhost:3000` to authorised javascript origins
+8. Click to create OAuth client ID
+9. Set up `OAuth User Consent` and download the JSON file which looks like
+
+```json
+{
+    "web":
+    {
+        "client_id":"..",
+        "project_id":"time-tracker-295006",
+        "auth_uri":"https://accounts.google.com/o/oauth2/auth",
+        "token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret":"..",
+        "javascript_origins":["http://localhost:3000"]
+    }
+}
+```
+10. Click to configure the `Consent Screen`
+11. Ensure `.env` is an entry in your `.gitignore` file
+12. Use them in your app with
+
+```js
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
+const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET
+```
+13. On the `console.developers.google.com` Credentials screen click to `create credentials` and add an `API key` and add to your .env file as well
+
+```js
+REACT_APP_API_KEY = ...
+```
+
+Follow these instructions https://developers.google.com/identity/sign-in/web/sign-in
+
+Go to https://console.developers.google.com/apis/credentials and Create Credentials => OAuth ClientID => Web Application and add URI http://localhost:5500 and get the clientID and client secret.
+
+
+Go do `developers console` and click on api, Credentials, OAuth, enter URL http://127.0.0.1:5500 and get the ID and secret 
+
+This is not working  so following this youtube https://www.youtube.com/watch?v=tZWnCZaJMUg&ab_channel=AdrienJOLY valid from 2017.  https://console.developers.google.com/apis/credentials.  
+
+Following https://www.youtube.com/watch?v=zaRUq1siZZo&ab_channel=GrantSingleton visiting this page.  https://developers.google.com/calendar/v3/reference/events/insert and start at this page https://developers.google.com/calendar/quickstart/js and for project 'Quickstart' get client id, secret and api key.  
+
+Now in the react app in the `index.html` file add
+
+```html
+<script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+```
+
+
+## Getting data
+
+Using this page to get our data urls https://developers.google.com/calendar/v3/reference/?apix=true
+
+try and get data from
+
+https://www.googleapis.com/calendar/v3 which is the root url, plus /users/me/calendarList/calendarId
+
