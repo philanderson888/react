@@ -2139,6 +2139,13 @@ This is not working  so following this youtube https://www.youtube.com/watch?v=t
 
 Following https://www.youtube.com/watch?v=zaRUq1siZZo&ab_channel=GrantSingleton visiting this page.  https://developers.google.com/calendar/v3/reference/events/insert and start at this page https://developers.google.com/calendar/quickstart/js and for project 'Quickstart' get client id, secret and api key.  
 
+Getting started https://developers.google.com/calendar => Javascript > 
+
+sample links https://developers.google.com/calendar/v3/reference/?apix=true 
+
+Keys https://console.developers.google.com/apis/credentials
+
+
 Now in the react app in the `index.html` file add
 
 ```html
