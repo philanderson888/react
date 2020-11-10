@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar Detail</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="../../../data.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Calendar API Interrogation</h1>
+        <div id="nav-placeholder"> </div>    
+    </div>
+    <script>
+        $(function(){
+        $("#nav-placeholder").load("nav.html");
+        });
+    </script>
+    <div class="container">
+        <button onclick="authenticate().then(loadClient)">authorize and load</button>
+        <button onclick="authenticate().then(loadClient).then(listCalendarEntries)">Calendar List Entries</button>
+        <button onclick="authenticate().then(loadClient).then(getCalendarMetadata)">Get Calendar Metadata</button>
+        <button onclick="authenticate().then(loadClient).then(getTimeDifferences)">Get Time Differences</button>
+        <h3>Calendar Object</h3>
+        <div id="calendar-object"></div>
+        <h3>Events Listed Here</h3>
+        <div id="events">Events listed here</div>
+        <h3>Time Differences Listed Here</h3>
+        <div id="time-difference"></div>
+        <h3>Total Time Differences Listed Here</h3>
+        <div id="totalTimeDifference">Total Time Difference</div>
+    </div>
+    <script>
+    function authenticate() {
+        return gapi.auth2.getAuthInstance()
+            .signIn({scope: "https://www.googleapis.com/auth/calendar"})
+            .then(function() { console.log("Sign-in successful"); },
+                function(err) { console.error("Error signing in", err); });
+    }
+    function loadClient() {
+        gapi.client.setApiKey(API_KEY);
+        return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest")
+            .then(function() { console.log("GAPI client loaded for API"); },
+                function(err) { console.error("Error loading GAPI client for API", err); });
+    }
+    // Make sure the client is loaded and sign-in is complete before calling this method.
+    function listCalendarEntries() {
+        return gapi.client.calendar.calendarList.list()
+            .then(function(response) {
+                    // Handle the results here (response.result has the parsed body).
+                    console.log("Response", response.result);
+                    let output = '';
+                    for(calendar of response.result.items){
+                        output += calendar.summary + '<br/>' + calendar.id + '<br/>' + JSON.stringify(calendar) + "< br/><br /><br /><br/>"
+                    }
+                    document.getElementById('calendar-object').innerHTML=output;
+                },
+                function(err) { console.error("Execute error", err); });
+    }
+    function getCalendarMetadata(){
+        return gapi.client.calendar.calendarList.list()
+            .then(function(response) {
+                    // Handle the results here (response.result has the parsed body).
+                    console.log("Response", response);
+                },
+                function(err) { console.error("Execute error", err); });
+    }
+    function getTimeDifferences(){
+        return gapi.client.calendar.events.list({calendarId})
+            .then(function(response) {
+                    const events = response.result.items.slice(0,5).map(event=>event)
+                    console.log("Response.result.items", events);
+                    let eventData = '';
+                    let totalDiff = 0;
+                    for(const event of events){
+                        if (event===undefined) continue
+                        if (event.status==='cancelled') continue
+                        if (event.start==='undefined') continue
+                        if (event.start.dateTime===undefined) continue
+                        const start = event.start.dateTime
+                        const end = event.end.dateTime
+                        const diff = (new Date(end)) - (new Date(start))
+                        totalDiff += diff
+                        document.getElementById('time-difference').innerHTML += `${diff} and running total is ${totalDiff}<br />`;
+                        const days = Math.floor(diff/86400000)
+                        const hours = Math.floor((diff%86400000) / 3600000)
+                        const mins = Math.floor(((diff % 86400000)%3600000)/60000)
+                        const output = `${start} --------- ${end} ========== ${days} days, ${hours} hours, ${mins} minutes\n`;
+                        eventData += output
+                        console.log(output)
+                    }
+                    document.getElementById('events').innerText=eventData
+                    const totalDiffDays = Math.floor(totalDiff/86400000)
+                    const totalDiffHours = Math.floor((totalDiff%86400000) / 3600000)
+                    const totalDiffMins = Math.floor(((totalDiff % 86400000)%3600000)/60000)
+                    const output = `difference of ${totalDiff} = ${totalDiffDays} days, ${totalDiffHours} hours, ${totalDiffMins} minutes\n`;
+                    document.getElementById('totalTimeDifference').innerText=output
+                },
+                function(err) { console.error("Execute error", err); });
+    }
+    gapi.load("client:auth2", function() {
+        gapi.auth2.init({client_id: CLIENT_ID});
+    });
+    </script>
+</body>
+</html>
