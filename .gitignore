@@ -120,3 +120,5 @@ yarn-error.log*
 /.changelog
 .npm/
 
+# files with api keys
+data.js
