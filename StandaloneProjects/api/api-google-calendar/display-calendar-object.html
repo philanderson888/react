@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Calendar Detail</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="../../../data.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Calendar API Interrogation</h1>
+        <div id="nav-placeholder"> </div>    
+    </div>
+    <script>
+        $(function(){
+        $("#nav-placeholder").load("nav.html");
+        });
+    </script>
+    <div class="container">
+      <h1>Display Calendar Object</h1>
+      <button onclick="authenticate().then(loadClient).then(execute)">Authenticate then load calendar object</button>
+      <h3>Calendar Name</h3>
+      <div id="calendar-name"></div>
+      <h3>Calendar Object</h3>
+      <div id="calendar-object"></div>
+    </div>
+    <script>
+    function authenticate() {
+        return gapi.auth2.getAuthInstance()
+            .signIn({scope: "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.readonly"})
+            .then(function() { console.log("Sign-in successful"); },
+                function(err) { console.error("Error signing in", err); });
+    }
+    function loadClient() {
+        gapi.client.setApiKey(API_KEY);
+        return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest")
+            .then(function() { console.log("GAPI client loaded for API"); },
+                function(err) { console.error("Error loading GAPI client for API", err); });
+    }
+    function execute() {
+        return gapi.client.calendar.calendars.get({calendarId})
+            .then(function(response) {
+                    console.log("Response", response);
+                    document.getElementById('calendar-name').innerText = response.result.summary
+                    document.getElementById('calendar-object').innerText = JSON.stringify(response)
+                },
+                function(err) { console.error("Execute error", err); });
+    }
+    gapi.load("client:auth2", function() {
+        gapi.auth2.init({client_id: CLIENT_ID});
+    });
+    </script>
+</body>
+</html>
