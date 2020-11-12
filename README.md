@@ -2091,7 +2091,7 @@ export default ApiPut
 
 First version is HTML only ie not a react app
 
-Find it in [StandaloneProjects/api/api-google-calendar/README.md](StandaloneProjects/api/api-google-calendar/README.md)
+Find it in [SingleHtmlFiles\api-google-calendar-html](SingleHtmlFiles\api-google-calendar-html\README.md)
 
 ```html
 <!DOCTYPE html>
@@ -2257,20 +2257,15 @@ const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET
 REACT_APP_API_KEY = ...
 ```
 
-Follow these instructions https://developers.google.com/identity/sign-in/web/sign-in
-
-Go to https://console.developers.google.com/apis/credentials and Create Credentials => OAuth ClientID => Web Application and add URI http://localhost:5500 and get the clientID and client secret.
-
-
-Go do `developers console` and click on api, Credentials, OAuth, enter URL http://127.0.0.1:5500 and get the ID and secret 
-
-This is not working  so following this youtube https://www.youtube.com/watch?v=tZWnCZaJMUg&ab_channel=AdrienJOLY valid from 2017.  https://console.developers.google.com/apis/credentials.  
-
 Following https://www.youtube.com/watch?v=zaRUq1siZZo&ab_channel=GrantSingleton visiting this page.  https://developers.google.com/calendar/v3/reference/events/insert and start at this page https://developers.google.com/calendar/quickstart/js and for project 'Quickstart' get client id, secret and api key.  
 
 Getting started https://developers.google.com/calendar => Javascript > 
 
 sample links https://developers.google.com/calendar/v3/reference/?apix=true 
+
+Follow these instructions https://developers.google.com/identity/sign-in/web/sign-in
+
+Go to https://console.developers.google.com/apis/credentials and Create Credentials => OAuth ClientID => Web Application and add URI http://localhost:5500 and get the clientID and client secret.
 
 Keys https://console.developers.google.com/apis/credentials
 
@@ -2810,6 +2805,8 @@ with CSS in `index.html` or `App.css` (have to import with `import './App.css'`)
 ## React With Google Maps
 
 https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
+
+
 
 ## JSX
 
