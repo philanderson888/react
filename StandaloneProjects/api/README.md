@@ -24,9 +24,9 @@
 
 ## Google Calendar API Client
 
-[Google Calendar HTML version, not react](api-google-calendar/README.md)
+[Google Calendar plain HTML](api-google-calendar-html/README.md)
 
-[Google Calendar](api-google-calendar-01)
+[Google Calendar](api-google)
 
 
 

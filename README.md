@@ -46,7 +46,9 @@
   - [Getting data](#getting-data)
   - [API Google Calendar](#api-google-calendar-2)
   - [Google Calendar API using `try it`](#google-calendar-api-using-try-it)
+  - [React with Google Calendar](#react-with-google-calendar)
   - [React With Google Maps](#react-with-google-maps)
+  - [JSX](#jsx)
 
 ## Overview
 
@@ -2207,6 +2209,8 @@ Find it in [StandaloneProjects/api/api-google-calendar/README.md](StandaloneProj
 
 This is for the react app
 
+Links
+- Docs https://developers.google.com/calendar
 
 To make an app which takes data from Google Calendar do the following
 
@@ -2288,7 +2292,7 @@ https://www.googleapis.com/calendar/v3 which is the root url, plus /users/me/cal
 
 ## API Google Calendar
 
-Existing data at 
+Existing data at https://console.developers.google.com
 
 Existing keys https://console.developers.google.com/apis/credentials
 
@@ -2479,9 +2483,337 @@ curl \
 ```
 
 
+## React with Google Calendar
+
+https://www.youtube.com/watch?v=zaRUq1siZZo&ab_channel=GrantSingleton
+
+Add this to `index.html`
+
+```html
+<script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+```
+
+Here is the Google Calendar app to list, add and remove Google calendar items
+
+```html
+import React from 'react'
+class ApiGoogleCalendar extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            error:null,
+            isLoaded:false,
+            DISCOVERY_DOCS:'discovery docs',
+            SCOPES:'scope',
+            eventAdded:'',
+            eventUrl:'',
+            events:[],
+            eventDetails:[],
+        }
+    }
+    componentDidMount(){
+        this.setState({
+            error:null,
+            isLoaded:true
+        })
+    }
+    queryEvents = () => {
+        console.clear()
+        let eventDetails = this.state.eventDetails;
+        let eventUrl = '';
+        let gapi = window.gapi
+        console.log('windows.gapi',window.gapi);
+        gapi.load('client:auth2',()=>{
+            console.log('loading gapi')
+            gapi.client.init({
+                clientId:process.env.REACT_APP_CLIENT_ID,
+                apiKey:process.env.REACT_APP_API_KEY,
+                discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+                scope: "https://www.googleapis.com/auth/calendar.readonly",
+            })
+            console.log('initialization completed')
+            gapi.load('calendar','v3',()=>console.log('loading calendar'))
+            gapi.auth2.getAuthInstance().signIn()
+            .then(()=>{
+                console.log(`signed in to google calendar`)
+                gapi.client.calendar.events.list({calendarId:'primary', maxResults:2500, timeMin:'2020-11-11T00:00:00Z'})
+                .then(response=>{
+                        const events = response.result.items.filter(event=>{
+                            const created = event.created
+                            const dateNow = new Date();
+                            const today = new Date(Date.UTC(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate()))
+                            const createdDate = new Date(created)
+                            console.log('created',created)
+                            console.log('created', `${createdDate.getFullYear()}-${createdDate.getMonth()}-${createdDate.getDate()}`)
+                            console.log('today',today)
+                            console.log(`${event.id} -- ${event.summary}`)
+                            if(event.summary==='Google I/O 2015'){
+                                console.log('found a google event')
+                                gapi.client.calendar.events.delete({calendarId:'primary', eventId:event.id})
+                                .then(response=>{
+                                    if(response.error || response===false ){
+                                        console.log('no record deleted')
+                                    }
+                                    else{
+                                        console.log('event deleted with id',event.id)
+                                    }  
+                                })    
+                            }
+                            if(created !== 'undefined' && typeof event.summary !== 'undefined') {
+                                eventDetails.push({
+                                    summary: event.summary, 
+                                    id: event.id, 
+                                    htmlLink: event.htmlLink
+                                })   
+                            }
+                            // just items created today or later!
+                            return (createdDate>today && created !== 'undefined')
+                        })
+                        console.log('events',events)
+                        this.setState({
+                            events,
+                            eventDetails
+                        })
+                    })
+            })
+        })
+        this.setState({
+            eventUrl:'',
+            eventAdded:'',
+        })
+    }
+    addNewEvent = () => {
+        console.clear()
+        let eventDetails = this.state.eventDetails;     
+        let eventUrl = '';
+        let gapi = window.gapi
+        console.log('windows.gapi',window.gapi);
+        gapi.load('client:auth2',()=>{
+            console.log('loading gapi')
+            gapi.client.init({
+                clientId:process.env.REACT_APP_CLIENT_ID,
+                apiKey:process.env.REACT_APP_API_KEY,
+                discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+                scope: "https://www.googleapis.com/auth/calendar.readonly",
+            })
+            console.log('initialization completed')
+            gapi.load('calendar','v3',()=>console.log('loading calendar'))
+            gapi.auth2.getAuthInstance().signIn()
+            .then(()=>{
+                console.log(`signed in to google calendar`)
+                var event = {
+                    'summary': 'Google I/O 2015',
+                    'location': '800 Howard St., San Francisco, CA 94103',
+                    'description': 'A chance to hear more about Google\'s developer products.',
+                    'start': {
+                      'dateTime': '2020-11-12T10:15:00',
+                      'timeZone': 'GMT'
+                    },
+                    'end': {
+                      'dateTime': '2020-11-12T10:30:00',
+                      'timeZone': 'GMT'
+                    },
+                    'recurrence': [],
+                    'attendees': [],
+                    'reminders': {
+                      'useDefault': false,
+                      'overrides': [
+                        {'method': 'email', 'minutes': 24 * 60},
+                        {'method': 'popup', 'minutes': 10}
+                      ]
+                    }
+                  };
+                  console.log('about to log an event',event)
+                  let request = gapi.client.calendar.events.insert({
+                      'calendarId': 'primary',
+                      'resource': event
+                  })
+                  request.execute(event => {
+                        // htmlLink is link to new google event
+                        eventUrl = event.htmlLink
+                        console.log('event url is ',eventUrl)
+                        this.setState({
+                        eventAdded:'Event added ',
+                        eventUrl,
+                        events:[],
+                        eventDetails:[],
+                    })
+                })
+            })
+        })
+        this.setState({
+            eventUrl:'creating event ...',
+        })
+    }
+    deleteEvent = () => {
+        console.clear()
+        let eventDetails = this.state.eventDetails;   
+        let gapi = window.gapi
+        console.log('windows.gapi',window.gapi);
+        gapi.load('client:auth2',()=>{
+            console.log('loading gapi')
+            gapi.client.init({
+                clientId:process.env.REACT_APP_CLIENT_ID,
+                apiKey:process.env.REACT_APP_API_KEY,
+                discoveryDocs:["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+                scope: "https://www.googleapis.com/auth/calendar.readonly",
+            })
+            console.log('initialization completed')
+            gapi.load('calendar','v3',()=>console.log('loading calendar'))
+            gapi.auth2.getAuthInstance().signIn()
+            .then(()=>{
+                console.log(`signed in to google calendar`)
+                gapi.client.calendar.events.list({calendarId:'primary', maxResults:2500, timeMin:'2020-11-11T00:00:00Z'})
+                .then(response=>{
+                        let eventCount = 0;
+                        const events = response.result.items.filter(event=>{
+                            const created = event.created
+                            const dateNow = new Date();
+                            const today = new Date(Date.UTC(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate()))
+                            const createdDate = new Date(created)
+                            console.log('created',created)
+                            console.log('created', `${createdDate.getFullYear()}-${createdDate.getMonth()}-${createdDate.getDate()}`)
+                            console.log('today',today)
+                            console.log(`${event.id} -- ${event.summary}`)
+                            if(event.summary==='Google I/O 2015'){
+                                eventCount++;
+                                console.log('found a google event')
+                                gapi.client.calendar.events.delete({calendarId:'primary', eventId:event.id})
+                                .then(response=>{
+                                    if(response.error || response===false ){
+                                        console.log('no record deleted')
+                                    }
+                                    else{
+                                        console.log('event deleted with id',event.id)
+                                    }  
+                                })    
+                            }
+                            if(created !== 'undefined' && typeof event.summary !== 'undefined') {
+                                eventDetails.push({
+                                    summary: event.summary, 
+                                    id: event.id, 
+                                    htmlLink: event.htmlLink,
+                                })   
+                            }
+                            return (createdDate>today && created !== 'undefined')
+                        })
+                        console.log('events',events)
+                        this.setState({
+                            events,
+                            eventDetails,
+                            eventUrl: eventCount>0?`${eventCount} events deleted`:'no events deleted',
+                        })
+                    })
+            })
+        })
+        this.setState({
+            eventUrl:'deleting Google I/O events ....',
+            eventAdded:'',
+        })
+    }
+    render(){
+        const { error, isLoaded } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>Google Calendar - List, Add, Remove Events</h2>
+                    <div>
+                        <button className="buttonSeparate" type='button' onClick={this.queryEvents}>List Events</button>
+                        <button className="buttonSeparate" type='button' onClick={this.addNewEvent}>Add Google I/O Event</button>
+                        <button className="buttonSeparate" type='button' onClick={this.deleteEvent}>List Events and Delete Google I/O Events</button>
+                        <div id='discovery-docs'><p>{this.state.discoveryDocs}</p></div>
+                        <div id='scope'><p>{this.state.scope}</p></div>
+                        <div id='api-calendar'>{this.state.apiData}</div>
+                        <div id='event-url'>{this.state.eventAdded}<a href={this.state.eventUrl} target="_blank" rel="noreferrer">{this.state.eventUrl}</a></div>
+                        <div id='list-of-events'>
+                            <ul>
+                                {this.state.events.map(event=>{
+                                    <li>event.summary</li>
+                                })}
+                            </ul>
+                        </div>
+                        <div id='event-details'>
+                            <ul>
+                                {this.state.eventDetails.map(event=>(
+                                    <li className="eventList" key={event.id}><a href={event.htmlLink} target='_blank'>{event.summary}</a></li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </div> 
+            )
+        }
+    }
+}
+export default ApiGoogleCalendar
+```
+
+with CSS in `index.html` or `App.css` (have to import with `import './App.css'`)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API Google Calendar</title>
+    <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+    <style>
+      html{
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      div.container{
+          width:80vw;
+          margin:auto;
+      }
+      #buttonCalendar{
+          margin-top:3vh;
+      }
+      .iconDelete{
+        width:0.7vw;
+      }
+      .iconEdit{
+        width:0.7vw;
+      }
+      .eventList{
+        background-color: #d4dce6;
+        margin:1vmin 0;
+        border:1px solid #92abc3;
+        list-style-type: none;
+        padding:1vmin 2vmin;
+      }
+      .buttonSeparate{
+        margin:1vmin 2vmin;
+        background-color: #c2c6ec;
+        border-radius:2vmin;
+        border:1px solid #8d95e0;
+      }
+      .buttonSeparate:hover{
+        background-color: #969ee7;
+        border:1px solid #4f5dd3;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
 
 
 ## React With Google Maps
 
 https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
+
+## JSX
+
+We can read about JSX in detail here
+
+https://reactjs.org/docs/jsx-in-depth.html#html-tags-vs.-react-components 
 
