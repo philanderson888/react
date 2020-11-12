@@ -9,6 +9,8 @@
   - [Standalone Projects](#standalone-projects)
   - [Resources](#resources)
   - [Introduction](#introduction)
+  - [NPM Node Package Manager](#npm-node-package-manager)
+  - [NPX Node Package Execute](#npx-node-package-execute)
   - [Starter Code](#starter-code)
   - [Component (think of as a class)](#component-think-of-as-a-class)
     - [CreateElement From Component (think of instantiating a class)](#createelement-from-component-think-of-instantiating-a-class)
@@ -120,9 +122,35 @@ yarn global add create-react-app
 // or
 npm install -g create-react-app
 create-react-app my-app
+// or
+npx create-react-app my-app
 cd my-app
 npm start
 ```
+
+## NPM Node Package Manager
+
+NPM install scripts located in `package.json`
+
+```json
+{
+    "name": "Your app",
+    "version":  "1.0.0",
+    "scripts":  {
+        "your-package":  "your-package-name"
+     }
+}
+```
+
+NPM links are created at `node_modules/.bin` and globally at `%AppData%/npm`
+
+## NPX Node Package Execute
+
+NPX was created in 2010 to manage packages
+
+NPX comes with NPM
+
+
 
 ## Starter Code
 
@@ -2800,7 +2828,60 @@ with CSS in `index.html` or `App.css` (have to import with `import './App.css'`)
 
 https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
 
+```powershell
+npx create-react-app api-google-maps
+cd api-google-maps
+yarn add react-router-dom
+yarn start
+```
 
+Build this component and strip out all other superfluous code from the application including all CSS etc
+
+```jsx
+import React from 'react'
+class GoogleMaps extends React.Component {
+    constructor(){
+        super()
+        this.state = {
+            error:null,
+            isLoaded:false,
+            map:'',
+        }
+    }
+    componentDidMount(){
+        this.setState({
+            error:null,
+            isLoaded:true
+        })
+    }
+    showMap = () => {
+        console.clear()
+        this.setState({
+            error:null,
+            map:'a map will be shown here'
+        })
+    }   
+    render(){
+        const { error, isLoaded } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>Google Maps</h2>
+                    <div>
+                        <button className="buttonSeparate" type='button' onClick={this.showMap}>Show Map</button>
+                        <div id='map'><p>{this.state.map}</p></div>
+                    </div>
+                </div> 
+            )
+        }
+    }
+}
+export default GoogleMaps
+```
 
 ## JSX
 
