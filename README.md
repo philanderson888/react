@@ -2399,12 +2399,6 @@ Also add http://localhost:5500 to the API OAuthAPI2 whitelist
         var textContent = document.createTextNode(message + '\n');
         pre.appendChild(textContent);
       }
-
-      /**
-       * Print the summary and start datetime/date of the next ten events in
-       * the authorized user's calendar. If no events are found an
-       * appropriate message is printed.
-       */
       function listUpcomingEvents() {
           console.log(`in a function`)
         gapi.client.calendar.events.list({
