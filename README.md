@@ -2888,7 +2888,13 @@ At `console.developers.google.com` create a project and enable it for `Google Ma
 
 Also check out the project status at `https://console.cloud.google.com/home/dashboard`
 
+For the project, enable the `Google Maps`, `GeoCoding` and `Places` APIs
 
+Grab the `Api KEY` and `ClientId` and add them to `.env` and ensure `.env` is in your `.gitignore`
+
+To test out the API we can simply visit the link https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=...my...api...key...goes...here.  
+
+You first have to enable billing at https://console.cloud.google.com/project/_/billing/enable and might have to visit https://console.developers.google.com/billing to get the billing id as well 
 
 ## JSX
 
