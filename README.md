@@ -2832,6 +2832,7 @@ https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
 npx create-react-app api-google-maps
 cd api-google-maps
 yarn add react-router-dom
+yarn add react-geocode react-google-autocomplete react-google-maps
 yarn start
 ```
 
@@ -2882,6 +2883,12 @@ class GoogleMaps extends React.Component {
 }
 export default GoogleMaps
 ```
+
+At `console.developers.google.com` create a project and enable it for `Google Maps API`
+
+Also check out the project status at `https://console.cloud.google.com/home/dashboard`
+
+
 
 ## JSX
 
