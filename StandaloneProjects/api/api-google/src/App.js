@@ -9,9 +9,8 @@ import ApiDelete2 from './components/ApiDelete2'
 import ApiGoogleCalendar from './components/ApiGoogleCalendar'
 import Navbar from './components/Navbar'
 function App() {
-  var gapi = window.gapi
   return (
-    <div>
+    <div className="container">
       <Navbar />
       <Switch>
         <Route path='/' component={Home} exact />
