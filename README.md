@@ -8,6 +8,7 @@
   - [Single File React HTML Pages](#single-file-react-html-pages)
   - [Standalone Projects](#standalone-projects)
   - [Resources](#resources)
+  - [Terms](#terms)
   - [Introduction](#introduction)
   - [NPM Node Package Manager](#npm-node-package-manager)
   - [NPX Node Package Execute](#npx-node-package-execute)
@@ -44,12 +45,13 @@
   - [Add User With Max ID](#add-user-with-max-id)
   - [Edit User](#edit-user)
   - [API Google Calendar](#api-google-calendar)
-  - [API Google Calendar](#api-google-calendar-1)
   - [Getting data](#getting-data)
-  - [API Google Calendar](#api-google-calendar-2)
+  - [API Google Calendar](#api-google-calendar-1)
   - [Google Calendar API using `try it`](#google-calendar-api-using-try-it)
   - [React with Google Calendar](#react-with-google-calendar)
   - [React With Google Maps](#react-with-google-maps)
+    - [react-google-maps](#react-google-maps)
+  - [React Google Maps](#react-google-maps-1)
   - [JSX](#jsx)
 
 ## Overview
@@ -90,7 +92,10 @@ Examples - https://www.jqwidgets.com
 
 [Facebook React Tutorial] https://facebook.github.io/react/tutorial/tutorial.html
 
+## Terms
 
+- HOC Higher Order Component
+  
 ## Introduction
 
 Statement by creators of React at Facebook 
@@ -2115,125 +2120,10 @@ export default ApiPut
 ```
 
 
-## API Google Calendar
-
-First version is HTML only ie not a react app
-
-Find it in [SingleHtmlFiles\api-google-calendar-html](SingleHtmlFiles\api-google-calendar-html\README.md)
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Calendar Detail</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="../../../data.js"></script>
-</head>
-<body>
-    <div class="container">
-        <h1>Google Calendar API Interrogation</h1>
-        <div id="nav-placeholder"> </div>    
-    </div>
-    <script>
-        $(function(){
-        $("#nav-placeholder").load("nav.html");
-        });
-    </script>
-    <div class="container">
-        <button onclick="authenticate().then(loadClient).then(listCalendarEntries)">Calendar List Entries</button>
-        <h3>Calendar Object</h3>
-        <div id="calendar-object"></div>
-        <h3>Events Listed Here</h3>
-        <div id="events">Events listed here</div>
-        <h3>Time Differences Listed Here</h3>
-        <div id="time-difference"></div>
-        <h3>Total Time Differences Listed Here</h3>
-        <div id="totalTimeDifference">Total Time Difference</div>
-    </div>
-    <script>
-    function authenticate() {
-        return gapi.auth2.getAuthInstance()
-            .signIn({scope: "https://www.googleapis.com/auth/calendar"})
-            .then(function() { console.log("Sign-in successful"); },
-                function(err) { console.error("Error signing in", err); });
-    }
-    function loadClient() {
-        gapi.client.setApiKey(API_KEY);
-        return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/calendar/v3/rest")
-            .then(function() { console.log("GAPI client loaded for API"); },
-                function(err) { console.error("Error loading GAPI client for API", err); });
-    }
-    // Make sure the client is loaded and sign-in is complete before calling this method.
-    function listCalendarEntries() {
-        return gapi.client.calendar.calendarList.list()
-            .then(function(response) {
-                    // Handle the results here (response.result has the parsed body).
-                    console.log("Response", response.result);
-                    let output = '';
-                    for(calendar of response.result.items){
-                        output += calendar.summary + '<br/>' + calendar.id + '<br/>' + JSON.stringify(calendar) + "< br/><br /><br /><br/>"
-                        getTimeDifferences(calendar.summary,calendar.id)
-                    }
-                    document.getElementById('calendar-object').innerHTML=output;
-                    
-                },
-                function(err) { console.error("Execute error", err); });
-    }
-    function getCalendarMetadata(){
-        return gapi.client.calendar.calendarList.list()
-            .then(function(response) {
-                    // Handle the results here (response.result has the parsed body).
-                    console.log("Response", response);
-                },
-                function(err) { console.error("Execute error", err); });
-    }
-    function getTimeDifferences(calendarSummary,calendarId){
-        return gapi.client.calendar.events.list({calendarId})
-            .then(function(response) {
-                    const events = response.result.items.slice(0,5).map(event=>event)
-                    console.log("Response.result.items", events);
-                    let eventData = '';
-                    let totalDiff = 0;
-                    document.getElementById('time-difference').innerHTML += `<br/><br/>${calendarSummary}<br/>${calendarId}<br/><br/>`
-                    for(const event of events){
-                        if (event===undefined) continue
-                        if (event.status==='cancelled') continue
-                        if (event.start==='undefined') continue
-                        if (event.start.dateTime===undefined) continue
-                        const start = event.start.dateTime
-                        const end = event.end.dateTime
-                        const diff = (new Date(end)) - (new Date(start))
-                        totalDiff += diff
-                        const days = Math.floor(diff/86400000)
-                        const hours = Math.floor((diff%86400000) / 3600000)
-                        const mins = Math.floor(((diff % 86400000)%3600000)/60000)
-                        const output = `${days} days, ${hours} hours, ${mins} minutes\n`;
-                        eventData += output
-                        console.log(output)
-                        document.getElementById('time-difference').innerHTML += output + "<br/>"
-                    }
-                    document.getElementById('events').innerText=eventData
-                    const totalDiffDays = Math.floor(totalDiff/86400000)
-                    const totalDiffHours = Math.floor((totalDiff%86400000) / 3600000)
-                    const totalDiffMins = Math.floor(((totalDiff % 86400000)%3600000)/60000)
-                    const output = `difference ${totalDiffDays} days, ${totalDiffHours} hours, ${totalDiffMins} minutes\n`;
-                    document.getElementById('time-difference').innerHTML += output + '<br/>'
-                },
-                function(err) { console.error("Execute error", err); });
-    }
-    gapi.load("client:auth2", function() {
-        gapi.auth2.init({client_id: CLIENT_ID});
-    });
-    </script>
-</body>
-</html>
-```
 
 ## API Google Calendar
+
+For the `Javascript` version of this app, built with regular HTML, CSS and Javascript, click [here https://github.com/philanderson888/javascript/api/api-google/README.md]
 
 This is for the react app
 
@@ -2831,7 +2721,7 @@ https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
 ```powershell
 npx create-react-app api-google-maps
 cd api-google-maps
-yarn add react-router-dom
+yarn add react-router-dom 
 yarn add react-geocode react-google-autocomplete react-google-maps
 yarn start
 ```
@@ -2895,6 +2785,142 @@ Grab the `Api KEY` and `ClientId` and add them to `.env` and ensure `.env` is in
 To test out the API we can simply visit the link https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=...my...api...key...goes...here.  
 
 You first have to enable billing at https://console.cloud.google.com/project/_/billing/enable and might have to visit https://console.developers.google.com/billing to get the billing id as well 
+
+### react-google-maps
+
+We can now look into using `react-google-maps`
+
+index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Google Maps</title>
+    <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+    <style>
+      html{
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+      div.container{
+          width:80vw;
+          margin:auto;
+      }
+      .buttonSeparate{
+        margin:1vmin 2vmin;
+        background-color: #c2c6ec;
+        border-radius:2vmin;
+        border:1px solid #8d95e0;
+        padding:2vmin 3vmin;
+        box-shadow: 1vmin 0vmin 4vmin 0.2vmin #8d95e0;
+        outline:none;
+      }
+      .buttonSeparate:hover{
+        background-color: #969ee7;
+        border-color:#4f5dd3;
+        
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+component
+
+```jsx
+import React from 'react'
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, } from "react-google-maps";
+const MapWithAMarker = withScriptjs(withGoogleMap(props =>
+    <GoogleMap
+      defaultZoom={8}
+      defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    >
+      <Marker
+        position={{ lat: -34.397, lng: 150.644 }}
+      />
+    </GoogleMap>
+  ));
+class SimpleMap extends React.Component {
+    constructor(){
+        super()        
+        let googleMapsUrl = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&v=3.exp&libraries=geometry,drawing,places`
+        this.state = {
+            error:null,
+            isLoaded:false,
+            map:'',
+            mapwithamarker:MapWithAMarker,
+            googleMapsUrl,
+            buttonText: 'show map',
+        }
+    }
+    componentDidMount(){
+        this.setState({
+            error:null,
+            isLoaded:true
+        })
+    }
+    showMap = () => {
+        console.clear()
+        let map = '';
+        let buttonText = '';
+        if(this.state.buttonText==='show map'){
+            buttonText = 'hide map'
+            map = <MapWithAMarker 
+                googleMapURL={this.state.googleMapsUrl} loadingElement={<div style={{ height: "100%" }} />}
+                containerElement={<div style={{ height: "400px" }} />}
+                mapElement={<div style={{ height: "100%" }} />}
+            />
+        } else {
+            buttonText = 'show map'
+        }
+        
+        this.setState({
+            error:null,
+            map,
+            buttonText,
+        })
+    }   
+    render(){
+        const { error, isLoaded } = this.state
+        if(error) {
+            return <div>Error : {error.message}</div>
+        } else if (!isLoaded) {
+            return <div>Loading ...</div>
+        } else {
+            return(
+                <div>
+                    <h2>Google Map With Older <a href="https://tomchentw.github.io/react-google-maps">react-google-maps</a> API</h2>
+                    <div>
+                        <button className="buttonSeparate" type='button' onClick={this.showMap}>{this.state.buttonText}</button>
+                        <div id='map'><p>{this.state.map}</p></div>
+                        <div>{this.state.mapWithAMarkerDisplay}</div>
+                    </div>
+                </div> 
+            )
+        }
+    }
+}
+export default SimpleMap
+```
+
+## React Google Maps
+
+https://www.youtube.com/watch?v=Alz13kGluL8&ab_channel=JohnAhn
+
+This is using a more up-to-date set of NPM libraries at https://www.npmjs.com/package/@react-google-maps/api
+
+```powershell
+yarn add @react-google-maps/api
+```
+
+
+
 
 ## JSX
 
