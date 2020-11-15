@@ -46,7 +46,6 @@ class SimpleMapUsingOlderLibrary extends React.Component {
         } else {
             buttonText = 'show map'
         }
-        
         this.setState({
             error:null,
             map,
@@ -62,7 +61,7 @@ class SimpleMapUsingOlderLibrary extends React.Component {
         } else {
             return(
                 <div>
-                    <h2>Google Map With Older <a href="https://tomchentw.github.io/react-google-maps">react-google-maps</a> API</h2>
+                    <h3>Google Map With older <a href="https://tomchentw.github.io/react-google-maps">react-google-maps</a> API</h3>
                     <div>
                         <button className="buttonSeparate" type='button' onClick={this.showMap}>{this.state.buttonText}</button>
                         <div id='map'><p>{this.state.map}</p></div>
