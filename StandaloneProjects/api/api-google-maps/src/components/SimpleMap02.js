@@ -57,7 +57,9 @@ class SimpleMap02 extends React.Component {
     }
     showMap = () => {
         console.clear()
+        let buttonMap2Text='show map 2';
         let map = '';
+        let map2 = '';
         let buttonText = '';
         if(this.state.buttonText==='show map'){
             buttonText = 'hide map'
@@ -75,7 +77,9 @@ class SimpleMap02 extends React.Component {
         this.setState({
             error:null,
             map,
+            map2,
             buttonText,
+            buttonMap2Text,
         })
     }  
     showMap2 = () => {
@@ -93,7 +97,7 @@ class SimpleMap02 extends React.Component {
                     containerElement={<div style={{ height: "400px" }} />}
                     mapElement={<div style={{ height: "100%" }} />}
                     defaultZoom={20} 
-                    zoom={20}
+                    zoom={this.state.zoom}
                 />
         } else {
             buttonMap2Text = 'show map 2'
@@ -102,9 +106,38 @@ class SimpleMap02 extends React.Component {
             error:null,
             map,
             map2,
+            buttonText,
             buttonMap2Text,
         })
     } 
+    zoomIn = () => {
+        console.clear()
+        let buttonText = 'show map';
+        let buttonMap2Text = 'hide map 2';
+        let map = '';
+        let zoom = this.state.zoom + 0.5;
+        console.log(`zoom`,zoom)
+        let map2 = 
+                <MapWithAMarker 
+                    googleMapURL={this.state.googleMapsUrl} 
+                    loadingElement={<div style={{ height: "100%" }} />}
+                    containerElement={<div style={{ height: "400px" }} />}
+                    mapElement={<div style={{ height: "100%" }} />} 
+                    zoom={zoom}
+                />
+        console.log(`map2`,map2)
+        this.setState({
+            error:null,
+            map,
+            map2,
+            buttonText,
+            buttonMap2Text,
+            zoom,
+        })
+    }
+    zoomOut = () => {
+
+    }
     render(){
         const { error, isLoaded } = this.state
         if(error) {
@@ -114,10 +147,12 @@ class SimpleMap02 extends React.Component {
         } else {
             return(
                 <div>
-                    <h2>Google Map With Older <a href="https://tomchentw.github.io/react-google-maps">react-google-maps</a> API</h2>
+                    <h3>Google Map With older <a href="https://tomchentw.github.io/react-google-maps">react-google-maps</a> API</h3>
                     <div>
                         <button className="buttonSeparate" type='button' onClick={this.showMap}>{this.state.buttonText}</button>
                         <button className="buttonSeparate" type='button' onClick={this.showMap2}>{this.state.buttonMap2Text}</button>
+                        <button className="buttonSeparate" type='button' onClick={this.zoomIn}>Zoom In</button>
+                        <button className="buttonSeparate" type='button' onClick={this.zoomOut}>Zoom Out</button>
                         <div id='map'><p>{this.state.map}</p></div>
                         <div id='map2'><p>{this.state.map2}</p></div>
                     </div>
