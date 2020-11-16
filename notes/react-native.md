@@ -27,6 +27,8 @@
     - [Applying multiple styles](#applying-multiple-styles)
     - [Full width](#full-width)
     - [Percentage width and height](#percentage-width-and-height)
+  - [State](#state)
+  - [Props](#props)
   - [Walkthrough](#walkthrough)
 
 ## Author
@@ -362,6 +364,85 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+## State
+
+Two types of data are sent to a component
+
+1. Props
+2. State
+
+Props are sent from the parent and can't be changed
+
+State can be changed inside the component
+
+We should
+
+1. Initialise state in the constructor
+2. Change state with setState
+
+## Props
+
+We can use props as follows in a function
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Text, View } from 'react-native';
+const ShowThis = (props) => {
+  const[test] = React.useState(true);
+  return <Text>hello {props.test}</Text>
+}
+const State = () => {
+  return (
+    <View style={{marginTop:50}}>
+      <Blink text='I love to blink' />
+      <ShowThis test='Tests Data' />
+    </View>
+  )
+}
+export default State;
+```
+
+or a longer one
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Text, View } from 'react-native';
+
+const Blink = (props) => {
+
+  const [isShowingText, setIsShowingText] = React.useState(true);
+
+  useEffect( () => {
+
+    const toggle = setInterval ( () => {
+      setIsShowingText(!isShowingText);
+    },1000)
+
+    return () => clearInterval(toggle)
+
+  })
+
+  if(!isShowingText) {
+    return <Text>I am not blinking</Text>
+  }
+
+  return <Text>{props.text}</Text>
+
+}
+
+const State = () => {
+  return (
+    <View style={{marginTop:50}}>
+      <Blink text='I love to blink' />
+    </View>
+  )
+}
+export default State;
+```
+
+
+
 
 ## Walkthrough
 
