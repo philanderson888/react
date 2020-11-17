@@ -18,8 +18,9 @@
   - [Components](#components)
   - [View](#view)
   - [Text](#text)
-  - [TextInput](#textinput)
-  - [Numeric Input](#numeric-input)
+  - [Input](#input)
+    - [TextInput](#textinput)
+    - [Numeric Input](#numeric-input)
   - [Card](#card)
   - [Image](#image)
   - [CSS](#css)
@@ -29,6 +30,7 @@
     - [Percentage width and height](#percentage-width-and-height)
   - [State](#state)
   - [Props](#props)
+  - [ScrollView and FlatList](#scrollview-and-flatlist)
   - [Walkthrough](#walkthrough)
 
 ## Author
@@ -86,11 +88,9 @@ https://snack.expo.io/@philanderson888/authentic-ramen
 
 ## Support
 
-If you're having problems
+[Twitter]https://twitter.com/expo
 
-you can tweet to us [@expo](https://twitter.com/expo) 
-
-or ask in our [forums](https://forums.expo.io).
+[forums](https://forums.expo.io)
 
 ## Live Code
 
@@ -179,8 +179,9 @@ const styles = StyleSheet.create({
   },
 });
 ```
+## Input
 
-## TextInput
+### TextInput
 
 ```jsx
 <TextInput
@@ -210,7 +211,7 @@ numberOfLines={4}
 />
 ```
 
-## Numeric Input
+### Numeric Input
 
 ```jsx
 <TextInput
@@ -383,6 +384,45 @@ We should
 
 ## Props
 
+We can pass data from `App.js` to a component using props
+
+App.js
+
+```jsx
+import * as React from 'react';
+import { View, } from 'react-native';
+import Props from './components/Props';
+export default function App() {
+  return (
+    <View style={styles.container}>   
+      <Props testData='some test data' testData2='and some more data' />
+    </View>
+  );
+}
+```
+
+Props.js
+
+```jsx
+import React from 'react';
+import { View, Text } from 'react-native';
+const Props = (props) => {
+  const[testData, testData2] = React.useState(true);
+  return (
+    <View>
+      <Text>Hi - displaying some test data here -> {props.testData}</Text>
+      <Text>And also this is some more props data -> {props.testData2}</Text>
+    </View>
+  );
+}
+export default Props;
+/*
+Hi - displaying some test data here -> some test data
+And also this is some more props data -> and some more data
+*/
+```
+
+
 We can use props as follows in a function
 
 ```jsx
@@ -441,6 +481,17 @@ const State = () => {
 export default State;
 ```
 
+
+
+
+
+
+
+
+## ScrollView and FlatList
+
+- ScrollView renders all components
+- FlatList renders all components lazily
 
 
 
