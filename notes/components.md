@@ -52,6 +52,29 @@ ReactDOM.render(
 );
 ```
 
+We can also export as well
+
+```jsx
+export default class MyComponent extends React.Component {
+  constructor(props)
+  super(props);
+  this.state = {
+    field: 'value',
+  }
+  render(){
+    return (<></>)
+  }
+}
+```
+
+or
+
+```jsx
+export default function MyComponent(props){
+  return (<></>)
+}
+```
+
 ## Display Component
 
 We display a component thus
