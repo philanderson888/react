@@ -1,13 +1,13 @@
 import React from 'react'
 import Navbar from './Navbar'
-class Home extends React.Component {
+class API extends React.Component {
     render(){
         return(
             <div>
                 <Navbar />
-                <h2>Home</h2>
+                <h2>APIs</h2>
             </div>  
         )
     }
 }
-export default Home
+export default API

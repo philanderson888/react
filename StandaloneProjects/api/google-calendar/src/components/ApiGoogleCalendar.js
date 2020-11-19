@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from './Navbar'
 class ApiGoogleCalendar extends React.Component {
     constructor(){
         super()
@@ -216,12 +217,20 @@ class ApiGoogleCalendar extends React.Component {
     render(){
         const { error, isLoaded } = this.state
         if(error) {
-            return <div>Error : {error.message}</div>
+            return 
+                <div>
+                    <Navbar />
+                    Error : {error.message}
+                </div>
         } else if (!isLoaded) {
-            return <div>Loading ...</div>
+            return <div>
+                       <Navbar />
+                       Loading ...
+                    </div>
         } else {
             return(
                 <div>
+                    <Navbar />
                     <h2>Google Calendar - List, Add, Remove Events</h2>
                     <div>
                         <button className="buttonSeparate" type='button' onClick={this.queryEvents}>List Events</button>

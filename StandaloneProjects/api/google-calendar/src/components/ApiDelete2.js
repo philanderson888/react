@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import Navbar from './Navbar'
 class ApiDelete2 extends React.Component {
     constructor(){
         super()
@@ -85,12 +86,20 @@ class ApiDelete2 extends React.Component {
     render(){
         const { error, isLoaded, users } = this.state
         if(error) {
-            return <div>Error : {error.message}</div>
+            return 
+                <div>
+                    <Navbar />
+                    Error : {error.message}
+                </div>
         } else if (!isLoaded) {
-            return <div>Loading ...</div>
+            return <div>
+                       <Navbar />
+                       Loading ...
+                    </div>
         } else {
             return(
                 <div>
+                    <Navbar />
                     <h2>API Delete User</h2>
                     <p>Max user id is {this.state.idMax}</p>
                     <ul>

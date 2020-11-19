@@ -12,6 +12,7 @@ November 2020
   - [Contents](#contents)
   - [History](#history)
   - [Introduction](#introduction)
+  - [Resources](#resources)
   - [Hello World](#hello-world)
   - [React Hooks With Input](#react-hooks-with-input)
   - [Context](#context)
@@ -22,9 +23,18 @@ Introduced 2018 at ReactConf with Sophie Albert, Dan Abramov, Ryan Florence
 
 ## Introduction
 
-React Hooks allow use of state using a function rather than a class
+- React Hooks allow state with function components
+- Hooks add more direct access to 
+  - props
+  - state
+  - context
+  - refs
+  - lifecycle
 
-React goal
+
+## Resources
+
+https://reactjs.org/docs/hooks-intro.html
 
 ## Hello World
 

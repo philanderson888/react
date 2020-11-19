@@ -6,6 +6,8 @@ class Navbar extends React.Component {
             <div>
                 <h1>React API Application</h1>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
+                <Link to="/apis">APIs</Link>&nbsp;|&nbsp;
+                <Link to="/components">Components</Link>&nbsp;|&nbsp;
                 <Link to="/api-get">API Get</Link>&nbsp;|&nbsp;
                 <Link to="/api-post">API Post</Link>&nbsp;|&nbsp;
                 <Link to="/api-put">API Put</Link>&nbsp;|&nbsp;

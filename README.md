@@ -65,6 +65,7 @@ Examples - https://www.jqwidgets.com
 ## Terms
 
 - HOC Higher Order Component
+- Render props - used to share state between components
   
 ## Introduction And Getting Started
 
