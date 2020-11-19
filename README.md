@@ -10,14 +10,17 @@
   - [Resources](#resources)
   - [Terms](#terms)
   - [Introduction And Getting Started](#introduction-and-getting-started)
+  - [JSX](#jsx)
   - [Rendering](#rendering)
   - [Components](#components)
   - [Routing Between Components](#routing-between-components)
+  - [Elements](#elements)
   - [API](#api)
   - [API Google Calendar](#api-google-calendar)
   - [API Google Maps](#api-google-maps)
-  - [JSX](#jsx)
+  - [Lifecycle](#lifecycle)
   - [React Native](#react-native)
+  - [React Hooks](#react-hooks)
 
 ## Overview
 
@@ -43,6 +46,8 @@ Also I have a much more complex set of standalone projects built with the `creat
 
 [reactforbeginners.com](https://reactforbeginners.com/)
 
+[Flavio Copes React Beginners Handbook](https://www.freecodecamp.org/news/react-beginner-handbook)
+
 [React Learning Path](https://medium.com/free-code-camp/learning-react-roadmap-from-scratch-to-advanced-bff7735531b6)
 
 [Build This Game On React Docs Tutorial](https://reactjs.org/tutorial/tutorial.html)
@@ -65,6 +70,11 @@ Examples - https://www.jqwidgets.com
 
 [Introduction And Getting Started](notes/introduction-and-getting-started.md)
 
+## JSX
+
+We can read about JSX in detail here
+
+https://reactjs.org/docs/jsx-in-depth.html#html-tags-vs.-react-components 
 ## Rendering
 
 [Rendering Components](notes/rendering-components.md)
@@ -76,6 +86,12 @@ Examples - https://www.jqwidgets.com
 ## Routing Between Components
 
 [Routing](notes/routing.md)
+
+
+
+## Elements
+
+[Elements](elements.md)
 
 ## API
 
@@ -89,11 +105,35 @@ Examples - https://www.jqwidgets.com
 
 [API Google Maps](notes/api-google-maps.md)
 
-## JSX
 
-We can read about JSX in detail here
+## Lifecycle
 
-https://reactjs.org/docs/jsx-in-depth.html#html-tags-vs.-react-components 
+lifecycle methods in a class
+
+```jsx
+// after component mounted
+componentDidMount(){}
+componentWillUnmount(){}
+// this updates any time any part of the component updates
+componentDidUpdate(){}
+```
+
+lifecycle methods in hooks
+
+```jsx
+import React, {useState, useEffect} from 'react'
+export default function MyComponent(props){
+  const [name, setName] = useState('some name');
+  // runs after initial render and after every update
+  useEffect(()=>{
+    // add javascript here to update whenever any part of the component updates
+    // for example could asynchronously update an api 
+    axios.POST(url,name)...
+  })
+  return(<></>)
+}
+```
+
 
 ## React Native
 
@@ -101,3 +141,6 @@ This is probably a whole new repo in itself but I am going to make a start here!
 
 [React Native](notes/react-native.md)
 
+## React Hooks
+
+[React Hooks](hooks.md)
