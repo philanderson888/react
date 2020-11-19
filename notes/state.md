@@ -10,6 +10,7 @@
     - [Child Component With Own State](#child-component-with-own-state)
     - [Alter Child State From Parent](#alter-child-state-from-parent)
   - [Alter Parent State From Child](#alter-parent-state-from-child)
+  - [State With Input](#state-with-input)
   - [Buttons](#buttons)
 
 
@@ -589,7 +590,50 @@ Click here to alter parent state from child
 
 So now we can alter state both from parent to child but also child to parent.
 
+## State With Input
 
+```jsx
+export default MyComponent extends React.Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      field:'my value'
+    }
+    this.handleNameChange = this.handleNameChange.bind(this) 
+  }
+}
+handleFieldChange(event){
+  this.setState({
+    field:event.target.value,
+  })
+}
+<input 
+  value={this.state.field}
+  onChange={this.handleFieldChange}
+/>
+```
+
+or as a function
+
+```jsx
+import React, {useState} from 'react'
+export default function MyComponent(props){
+    const [name,setName] =  useState('initialValue')
+    function handleNameChange(e){
+        setName(e.target.value)
+    }
+    return(
+        <section>
+            <Row label="thisLabel">
+                <input 
+                    value={field}
+                    onChange={handleNameChange}
+                />
+            </Row>
+        </section>
+    )
+}
+```
 
 
 
