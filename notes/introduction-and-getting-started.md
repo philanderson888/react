@@ -18,7 +18,19 @@ Render using
 
 	JSX which uses XML to store data
 
-React Setup
+## Goals
+
+- Performance
+- Most important renders are done first
+- Tooling - Chrome extension now with profilter to optimise
+
+## Issues
+
+- Wrapper Hell
+- Giant Components
+- Function vs Class
+ 
+## Setup
 
 https://reactjs.org/tutorial/tutorial.html
 
