@@ -36,6 +36,7 @@
   - [FlatList](#flatlist)
   - [Hyperlink](#hyperlink)
   - [Navigation](#navigation)
+  - [Tab Navigation](#tab-navigation)
   - [Walkthrough](#walkthrough)
 
 ## Author
@@ -819,6 +820,17 @@ export default function Clickable(){
 
 ## Navigation
 
+```jsx
+// push new route to stack or jump to existing element
+navigation.navigate('pagename')
+// push any page onto stack unlimited number of times
+navigation.push('page')
+// go back
+navigation.goBack()
+// home
+navigation.popToTop()
+```
+
 We can create an app to navigate between screens
 
 ```jsx
@@ -830,11 +842,21 @@ const Stack = createStackNavigator();
 const HomeScreen = ({navigation}) => {
   return (
     <View>
+      <Text>Visit profile</Text>
       <Button 
-        title="Home Screen Button" 
+        title="Profile" 
         onPress={ () => navigation.navigate('Profile',{name:'Phil'})}
       />
-      <Text>Here is home screen</Text>
+      <Text>Visit page 2</Text>
+      <Button 
+        title="Page 2" 
+        onPress={ () => navigation.navigate('Page2')}
+      />
+      <Text>Visit page 3</Text>
+      <Button 
+        title="Page 3" 
+        onPress={ () => navigation.navigate('Page3')}
+      />
     </View>
   );
 }
@@ -846,6 +868,23 @@ const ProfileScreen = (props, {navigation}) => {
     </View>
   );
 }
+const Page2 = (props,{navigation}) => {
+  return(
+    <View><Text>Here is Page 2</Text></View>
+  )
+}
+const Page3 = ({navigation}) => {
+  return(
+    <View>
+      <Text>Here is Page 3</Text>
+      <Text>Click to visit page 2</Text>
+      <Button 
+        title="Go To Page 2" 
+        onPress={ () => navigation.push('Page2')}
+      />
+    </View>
+  )
+}
 export default function Navigation1(){
   const navigate = () => {
     Alert.alert('you are about to navigate to a new screen')
@@ -855,10 +894,18 @@ export default function Navigation1(){
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{title: 'Welcome Screen'}} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{title: 'Profile Screen'}} />
+        <Stack.Screen name="Page2" component={Page2} options={{title: 'Page2'}} />
+        <Stack.Screen name="Page3" component={Page3} options={{title: 'Page3'}} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
+```
+
+## Tab Navigation
+
+```jsx
+
 ```
 
 ## Walkthrough
