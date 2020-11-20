@@ -152,4 +152,4 @@ This is probably a whole new repo in itself but I am going to make a start here!
 
 ## React With JWT
 
-[React with JWT](notes/react-with-jwt.md)
+[React with JWT](notes/jwt.md)
