@@ -32,21 +32,29 @@ handleFieldChange(event){
 or as a function
 
 ```jsx
-import React, {useState} from 'react'
-export default function MyComponent(props){
-    const [name,setName] =  useState('initialValue')
-    function handleNameChange(e){
-        setName(e.target.value)
+import React, {useState} from 'react';
+import {Row} from 'reactstrap'
+import NavbarComponents from './NavbarComponents'
+export default function Hooks() {
+    const [name,setName] = useState('Mary')
+    const handleNameChange = (event) => {
+        setName(event.target.value)
     }
-    return(
-        <section>
-            <Row label="thisLabel">
-                <input 
-                    value={field}
-                    onChange={handleNameChange}
-                />
-            </Row>
-        </section>
+    return (
+        <div>
+            <NavbarComponents />
+            <section>
+                <Row label="Name">{name}</Row>
+            </section>
+            <section>
+                <Row>
+                    <input 
+                        value={name}
+                        onChange={handleNameChange}
+                    />
+                </Row>
+            </section>
+        </div>
     )
 }
 ```
