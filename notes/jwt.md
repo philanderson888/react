@@ -15,6 +15,7 @@ November 2020
   - [Install back end](#install-back-end)
   - [JWT token](#jwt-token)
   - [React front end](#react-front-end)
+  - [HTTPS](#https)
 
 ## Introduction
 
@@ -195,6 +196,155 @@ Now connect to the back end
 CORS is blocking any request at present so we have to now add this to the back end
 
 
+```jsx
+import React, {useState} from 'react'
+import axios from 'axios'
+import NavbarAPIs from './NavbarAPIs'
+const url = 'http://localhost:3001';
+export default function JwtHttp() {
+    const [foods, setFoods] = useState([]);
+    const [myarray,setMyarray] = useState([1,2,3])
+    const [jwt, setJwt] = useState('here is a jwt token')
+    const getFoods = () => {
+        axios.get(`${url}/foods`)
+        .then((response)=> {
+          console.log('food data',response.data.foods);
+          setFoods(response.data.foods);
+        });
+    }
+    const getJwt = () => {
+      console.log('getting jwt')
+      axios.get(`${url}/jwt`)
+      .then(response=>{
+        console.log('token',response.data.token)
+        setJwt(response.data.token)  
+      })
+    }  
+    const getItems = () => {
+      console.log('getting items')
+      const array = myarray
+      array.push(array.length+1)
+      console.log('array',array)
+      setMyarray(array)  
+    } 
+    return (
+      <div>
+        <NavbarAPIs />
+        <h2>Getting data from an API</h2>
+        <button onClick={()=>getJwt()}>Get JWT</button>
+        <button onClick={()=>getFoods()}>Get Foods</button>
+        <button onClick={()=>getItems()}>Get Items</button>
+        <p>{jwt}</p>
+        <ul> 
+          {foods.map(food=>(
+            <li key={food.id}>{food.description}</li>
+          ))}
+        </ul>
+        <ul>
+          {myarray.map((item)=>(
+            <li key={item}>{item}</li>  
+          ))}
+        </ul>
+      </div>
+    );
+}
+/*
+This works with this server
 
+const express = require('express');
+const jwt = require('express-jwt');
+const jsonwebtoken = require('jsonwebtoken');
+const cors = require('cors')
+const app = express();
+app.use(cors());
+const foods = [
+    { id: 1, description: 'burritos' },
+    { id: 2, description: 'quesadillas' },
+    { id: 3, description: 'churos' }
+];
+const jwtSecret = 'secret123';
+app.get('/jwt',(request,response)=>{
+    response.json({
+        token: jsonwebtoken.sign({user:'philanderson'},jwtSecret)
+    })
+})
+app.get('/',(request,response)=>{
+    response.json({
+        token: jsonwebtoken.sign({user:'philanderson'},jwtSecret),
+        foods,
+    })
+});
+app.get('/foods',(request,response)=>{
+    response.json({
+        foods,
+    })
+});
+app.use(jwt({secret:jwtSecret,algorithms:['HS256'] }));
+app.listen(3001);
+console.log('Listening on 3001')
+*/
+```
 
+## HTTPS
 
+We can now build in an `https` back end
+
+```js
+const fs = require('fs');
+const http = require('http')
+const https = require('https');
+const express = require('express');
+const cors = require('cors');
+const privateKey = fs.readFileSync('key.pem');
+const publicCertificate = fs.readFileSync('cert.pem');
+const credentials = {
+    key: privateKey,
+    cert: publicCertificate
+}
+const expressJwt = require('express-jwt');
+const jsonwebtoken = require('jsonwebtoken');
+const jwtSecret = 'secret123';
+const app = express();
+app.use(cors());
+app.use(expressJwt({secret:jwtSecret,algorithms:['HS256'] }));
+const homePage = (request,response) => {
+    response.setHeader('Access-Control-Allow-Origin','*');
+    response.setHeader('Access-Control-Request-Method','*');
+    response.setHeader('Access-Control-Allow-Methods','OPTIONS,GET')
+    response.writeHead(200,{'Content-Type':'application/json'});
+    const data = {
+        helloworld:"you are now receiving data over https"
+    }
+    response.end(JSON.stringify(data));
+}
+const jwt = (request, response) => {
+    const data = {
+        token: jsonwebtoken.sign({user:'philanderson'},jwtSecret)
+    }
+    response.setHeader('Access-Control-Allow-Origin','*');
+    response.setHeader('Access-Control-Request-Method','*');
+    response.setHeader('Access-Control-Allow-Methods','OPTIONS,GET')
+    response.writeHead(200,{'Content-Type':'application/json'});
+    response.end(JSON.stringify(data));
+}
+const foods = [
+    { id: 1, description: 'burritos' },
+    { id: 2, description: 'quesadillas' },
+    { id: 3, description: 'churos' }
+];
+const getFood = (request,response) => {
+    response.setHeader('Access-Control-Allow-Origin','*');
+    response.setHeader('Access-Control-Request-Method','*');
+    response.setHeader('Access-Control-Allow-Methods','OPTIONS,GET')
+    response.writeHead(200,{'Content-Type':'application/json'});
+    response.end(JSON.stringify(foods));
+}
+app.get('/',homePage);
+app.get('/jwt',jwt);
+app.get('/getFood',getFood);
+const httpServer = http.createServer(app)
+const httpsServer = https.createServer(credentials,app)
+httpServer.listen(3001);
+httpsServer.listen(3002);
+console.log('http listening on 3001 and https on 3002');
+```
