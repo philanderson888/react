@@ -11,7 +11,8 @@ class NavbarAPIs extends React.Component {
                 <Link to="/api-put">API Put</Link>&nbsp;|&nbsp;
                 <Link to="/api-delete">API Delete</Link>&nbsp;|&nbsp;
                 <Link to="/api-delete-2">API Delete 2</Link>&nbsp;|&nbsp;
-                <Link to="/api-google-calendar">API Google Calendar</Link>
+                <Link to="/api-google-calendar">API Google Calendar</Link>&nbsp;|&nbsp;
+                <Link to="/jwt">JWT</Link>
             </div>
         )
     }

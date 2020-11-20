@@ -84,14 +84,8 @@ class ApiDelete2 extends React.Component {
         })
     }
     render(){
-        const { error, isLoaded, users } = this.state
-        if(error) {
-            return 
-                <div>
-                    <Navbar />
-                    Error : {error.message}
-                </div>
-        } else if (!isLoaded) {
+        const { isLoaded, users } = this.state
+        if (!isLoaded) {
             return <div>
                        <Navbar />
                        Loading ...

@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from './Navbar'
-import NavbarComponents from './NavbarComponents'
 class ApiDelete extends React.Component {
     constructor(){
         super()
@@ -88,14 +87,8 @@ class ApiDelete extends React.Component {
         })
     }
     render(){
-        const { error, isLoaded, users } = this.state
-        if(error) {
-            return 
-                <div>
-                    <Navbar />
-                    Error : {error.message}
-                </div>
-        } else if (!isLoaded) {
+        const { isLoaded, users } = this.state
+        if (!isLoaded) {
             return <div>
                        <Navbar />
                        Loading ...

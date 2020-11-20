@@ -23,7 +23,6 @@ class ApiGoogleCalendar extends React.Component {
     queryEvents = () => {
         console.clear()
         let eventDetails = this.state.eventDetails;
-        let eventUrl = '';
         let gapi = window.gapi
         console.log('windows.gapi',window.gapi);
         gapi.load('client:auth2',()=>{
@@ -87,8 +86,6 @@ class ApiGoogleCalendar extends React.Component {
     }
     addNewEvent = () => {
         console.clear()
-        let eventDetails = this.state.eventDetails;     
-        let eventUrl = '';
         let gapi = window.gapi
         console.log('windows.gapi',window.gapi);
         gapi.load('client:auth2',()=>{
@@ -133,7 +130,7 @@ class ApiGoogleCalendar extends React.Component {
                   })
                   request.execute(event => {
                         // htmlLink is link to new google event
-                        eventUrl = event.htmlLink
+                        let eventUrl = event.htmlLink
                         console.log('event url is ',eventUrl)
                         this.setState({
                         eventAdded:'Event added ',
@@ -215,14 +212,8 @@ class ApiGoogleCalendar extends React.Component {
         })
     }
     render(){
-        const { error, isLoaded } = this.state
-        if(error) {
-            return 
-                <div>
-                    <Navbar />
-                    Error : {error.message}
-                </div>
-        } else if (!isLoaded) {
+        const { isLoaded } = this.state
+        if (!isLoaded) {
             return <div>
                        <Navbar />
                        Loading ...
@@ -239,18 +230,18 @@ class ApiGoogleCalendar extends React.Component {
                         <div id='discovery-docs'><p>{this.state.discoveryDocs}</p></div>
                         <div id='scope'><p>{this.state.scope}</p></div>
                         <div id='api-calendar'>{this.state.apiData}</div>
-                        <div id='event-url'>{this.state.eventAdded}<a href={this.state.eventUrl} target="_blank" rel="noreferrer">{this.state.eventUrl}</a></div>
+                        <div id='event-url'>{this.state.eventAdded}<a href={this.state.eventUrl}>{this.state.eventUrl}</a></div>
                         <div id='list-of-events'>
                             <ul>
-                                {this.state.events.map(event=>{
-                                    <li>event.summary</li>
+                                {this.state.events.forEach(event=>{
+                                    <li>{event.summary}</li>
                                 })}
                             </ul>
                         </div>
                         <div id='event-details'>
                             <ul>
-                                {this.state.eventDetails.map(event=>(
-                                    <li className="eventList" key={event.id}><a href={event.htmlLink} target='_blank'>{event.summary}</a></li>
+                                {this.state.eventDetails.forEach(event=>(
+                                    <li className="eventList" key={event.id}><a href={event.htmlLink}>{event.summary}</a></li>
                                 ))}
                             </ul>
                         </div>
