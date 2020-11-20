@@ -122,3 +122,6 @@ yarn-error.log*
 
 # files with api keys
 data.js
+
+# certificates
+*.pem
