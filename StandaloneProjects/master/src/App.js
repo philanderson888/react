@@ -10,6 +10,8 @@ import ApiGoogleCalendar from './components/ApiGoogleCalendar';
 import API from './components/API';
 import NavbarComponents from './components/NavbarComponents';
 import MouseTracker from './components/MouseTracker';
+import Hooks from './components/Hooks';
+import Reactstrap from './components/Reactstrap.js'
 function App() {
   return (
     <div className="container">
@@ -24,6 +26,8 @@ function App() {
         <Route path='/api-google-calendar' component={ApiGoogleCalendar} />
         <Route path='/components' component={NavbarComponents} />
         <Route path='/mouse-tracker' component={MouseTracker} />
+        <Route path='/hooks' component={Hooks} />
+        <Route path='/reactstrap' component={Reactstrap} />
       </Switch>
     </div>
   );

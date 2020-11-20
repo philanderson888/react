@@ -6,8 +6,9 @@ class NavbarComponents extends React.Component {
             <div>
                 <h1>React Components</h1>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
-                <Link to="/apis">APIs</Link>&nbsp;|&nbsp;
-                <Link to="/mouse-tracker">Mouse Tracker</Link>
+                <Link to="/mouse-tracker">Mouse Tracker</Link>&nbsp;|&nbsp;
+                <Link to="/hooks">Hooks</Link>&nbsp;|&nbsp;
+                <Link to="/reactstrap">Reactstrap</Link>
             </div>
         )
     }

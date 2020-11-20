@@ -1,13 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-class Navbar extends React.Component {
+class NavbarAPIs extends React.Component {
     render(){
         return(
             <div>
-                <h1>React API Application</h1>
+                <h1>React APIs</h1>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
-                <Link to="/apis">APIs</Link>&nbsp;|&nbsp;
-                <Link to="/components">Components</Link>&nbsp;|&nbsp;
                 <Link to="/api-get">API Get</Link>&nbsp;|&nbsp;
                 <Link to="/api-post">API Post</Link>&nbsp;|&nbsp;
                 <Link to="/api-put">API Put</Link>&nbsp;|&nbsp;
@@ -18,4 +16,4 @@ class Navbar extends React.Component {
         )
     }
 }
-export default Navbar
+export default NavbarAPIs

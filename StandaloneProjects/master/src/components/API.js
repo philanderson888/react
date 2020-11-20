@@ -1,10 +1,10 @@
 import React from 'react'
-import Navbar from './Navbar'
+import NavbarAPIs from './NavbarAPIs'
 class API extends React.Component {
     render(){
         return(
             <div>
-                <Navbar />
+                <NavbarAPIs />
                 <h2>APIs</h2>
             </div>  
         )

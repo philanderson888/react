@@ -21,6 +21,7 @@
   - [Lifecycle](#lifecycle)
   - [React Native](#react-native)
   - [React Hooks](#react-hooks)
+  - [React With JWT](#react-with-jwt)
 
 ## Overview
 
@@ -40,7 +41,7 @@ Also I have a much more complex set of standalone projects built with the `creat
 
 [React Projects Built With `create-react-app`](StandaloneProjects/README.md)
 
-[API Projects](StandaloneProjects/api/README.md)
+[API Projects](StandaloneProjects/api)
 
 ## Resources
 
@@ -66,6 +67,9 @@ Examples - https://www.jqwidgets.com
 
 - HOC Higher Order Component
 - Render props - used to share state between components
+- reducer - function which determines changes to state.  
+- reducer - pure function, takes previous state and action and returns next state
+- Redux - manages state changes
   
 ## Introduction And Getting Started
 
@@ -104,7 +108,7 @@ https://reactjs.org/docs/jsx-in-depth.html#html-tags-vs.-react-components
 
 ## API Google Maps
 
-[API Google Maps](notes/api-google-maps.md)
+[API Google Maps](notes/api-google-maps.md) 
 
 
 ## Lifecycle
@@ -144,4 +148,8 @@ This is probably a whole new repo in itself but I am going to make a start here!
 
 ## React Hooks
 
-[React Hooks](hooks.md)
+[React Hooks](notes/hooks.md)
+
+## React With JWT
+
+[React with JWT](notes/react-with-jwt.md)
