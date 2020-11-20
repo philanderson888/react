@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import Navbar from './Navbar'
+import NavbarAPIs from './NavbarAPIs'
 class ApiPost extends React.Component {
     constructor(){
         super()
@@ -72,13 +72,13 @@ class ApiPost extends React.Component {
         const { isLoaded, users } = this.state
         if (!isLoaded) {
             return <div>
-                       <Navbar />
+                    <NavbarAPIs />
                        Loading ...
                     </div>
         } else {
             return(
                 <div>
-                    <Navbar />
+                    <NavbarAPIs />
                     <h2>API Post New User</h2>
                     <ul>
                         {users.map(user=>(

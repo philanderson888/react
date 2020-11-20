@@ -12,7 +12,8 @@ import NavbarComponents from './components/NavbarComponents';
 import MouseTracker from './components/MouseTracker';
 import Hooks from './components/Hooks';
 import Reactstrap from './components/Reactstrap.js'
-import Jwt from './components/Jwt.js'
+import JwtHttp from './components/JwtHttp.js'
+import JwtHttps from './components/JwtHttps.js'
 function App() {
   return (
     <div className="container">
@@ -29,7 +30,8 @@ function App() {
         <Route path='/mouse-tracker' component={MouseTracker} />
         <Route path='/hooks' component={Hooks} />
         <Route path='/reactstrap' component={Reactstrap} />
-        <Route path='/jwt' component={Jwt} />
+        <Route path='/jwt-http' component={JwtHttp} />
+        <Route path='/jwt-https' component={JwtHttps} />
       </Switch>
     </div>
   );

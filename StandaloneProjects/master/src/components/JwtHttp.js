@@ -2,15 +2,14 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import NavbarAPIs from './NavbarAPIs'
 const url = 'http://localhost:3001';
-export default function Jwt() {
-    const [foods, setFoods] = useState([{id:1,description:"description"},{id:2,description:"description2"}]);
+export default function JwtHttp() {
+    const [foods, setFoods] = useState([]);
     const [myarray,setMyarray] = useState([1,2,3])
     const [jwt, setJwt] = useState('here is a jwt token')
     const getFoods = () => {
         axios.get(`${url}/foods`)
         .then((response)=> {
           console.log('food data',response.data.foods);
-          console.log('one record',response.data.foods[0].description);
           setFoods(response.data.foods);
         });
     }
@@ -25,7 +24,7 @@ export default function Jwt() {
     const getItems = () => {
       console.log('getting items')
       const array = myarray
-      array.push(4)
+      array.push(array.length+1)
       console.log('array',array)
       setMyarray(array)  
     } 
@@ -39,17 +38,56 @@ export default function Jwt() {
         <p>{jwt}</p>
         <ul> 
           {foods.map(food=>(
-            <li>{food.description}</li>
+            <li key={food.id}>{food.description}</li>
           ))}
         </ul>
         <ul>
           {myarray.map((item)=>(
-            <li>{item}</li>  
+            <li key={item}>{item}</li>  
           ))}
         </ul>
       </div>
     );
 }
+/*
+This works with this server
+
+
+
+const express = require('express');
+const jwt = require('express-jwt');
+const jsonwebtoken = require('jsonwebtoken');
+const cors = require('cors')
+const app = express();
+app.use(cors());
+const foods = [
+    { id: 1, description: 'burritos' },
+    { id: 2, description: 'quesadillas' },
+    { id: 3, description: 'churos' }
+];
+const jwtSecret = 'secret123';
+app.get('/jwt',(request,response)=>{
+    response.json({
+        token: jsonwebtoken.sign({user:'philanderson'},jwtSecret)
+    })
+})
+app.get('/',(request,response)=>{
+    response.json({
+        token: jsonwebtoken.sign({user:'philanderson'},jwtSecret),
+        foods,
+    })
+});
+app.get('/foods',(request,response)=>{
+    response.json({
+        foods,
+    })
+});
+app.use(jwt({secret:jwtSecret,algorithms:['HS256'] }));
+app.listen(3001);
+console.log('Listening on 3001')
+
+
+*/
 
 
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import Navbar from './Navbar'
+import NavbarAPIs from './NavbarAPIs'
 class ApiPut extends React.Component {
     constructor(){
         super()
@@ -121,13 +121,13 @@ class ApiPut extends React.Component {
         const { isLoaded, users } = this.state
         if (!isLoaded) {
             return <div>
-                       <Navbar />
+                    <NavbarAPIs />
                        Loading ...
                     </div>
         } else {
             return(
                 <div>
-                    <Navbar />
+                    <NavbarAPIs />
                     <h2>API Update User</h2>
                     <p>Max user id is {this.state.idMax}</p>
                     <ul>

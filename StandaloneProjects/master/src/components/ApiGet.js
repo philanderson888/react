@@ -1,5 +1,5 @@
 import React from 'react'
-import Navbar from './Navbar'
+import NavbarAPIs from './NavbarAPIs'
 class APIGet extends React.Component {
     constructor(){
         super()
@@ -30,13 +30,13 @@ class APIGet extends React.Component {
         const { isLoaded, users } = this.state
         if (!isLoaded) {
             return <div>
-                       <Navbar />
+                    <NavbarAPIs />
                        Loading ...
                     </div>
         } else {
             return(
                 <div>
-                    <Navbar />
+                    <NavbarAPIs />
                     <h2>API Get Users</h2>
                     <ul>
                         {users.map(user=>(
