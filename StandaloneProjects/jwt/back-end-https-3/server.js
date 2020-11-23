@@ -2,6 +2,8 @@ const fs = require('fs');
 const http = require('http')
 const https = require('https');
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const privateKey = fs.readFileSync('key.pem');
 const publicCertificate = fs.readFileSync('cert.pem');
@@ -14,6 +16,8 @@ const jsonwebtoken = require('jsonwebtoken');
 const jwtSecret = 'secret123';
 const app = express();
 app.use(cors());
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended:false}));
 const homePage = (request,response) => {
     response.setHeader('Access-Control-Allow-Origin','*');
     response.setHeader('Access-Control-Request-Method','*');
@@ -48,9 +52,13 @@ const foods = (request,response) => {
 }
 app.get('/',homePage);
 app.get('/jwt',jwt);
+// foods now requires a token
+app.use('/',expressJwt({
+    secret:jwtSecret,
+    algorithms:['HS256'],
+    getToken: function fromCookie(request)
+}));
 app.get('/foods',foods);
-// now pages from here on down will require authentication!
-app.use(expressJwt({secret:jwtSecret,algorithms:['HS256'] }));
 const httpServer = http.createServer(app)
 const httpsServer = https.createServer(credentials,app)
 httpServer.listen(3001);

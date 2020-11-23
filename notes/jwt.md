@@ -11,15 +11,86 @@ November 2020
   - [Author](#author)
   - [Contents](#contents)
   - [Introduction](#introduction)
+  - [Background to JWT](#background-to-jwt)
+  - [JWT structure](#jwt-structure)
   - [Back End in Node!](#back-end-in-node)
   - [Install back end](#install-back-end)
   - [JWT token](#jwt-token)
   - [React front end](#react-front-end)
   - [HTTPS](#https)
+  - [Providing A Token As Authorization](#providing-a-token-as-authorization)
+  - [Flow 2 - JWT](#flow-2---jwt)
 
 ## Introduction
 
 Goal is to have a back-end with JWT tokens and a react front end storing those tokens
+
+Benefit of JWT is its stateless nature - there is no need to store the token on the server so that we can have
+- one server to create and issue the token
+- another server to verify the token is valid
+
+Secure - JWT is sent in a cookie
+
+Insecure - JWT is sent in the `authorization` http header and using https only otherwise man in the middle attack can occur
+
+An issue is that if we store the token in the localstorage of the client, this makes it susceptible to XSS cross-site scripting attack.  So we must set `HttpOnly` and `secure` flags of the cookie which we are storing in localstorage.
+
+If we set an expiry of 10 minutes we can refresh after that time.  We use a JWT refresh token with a longer expiry and is used to issue a new short-term JWT token every time that one expires.  Refresh tokens are not sent to the client but are stored in a back-end database.  Also every time a new access token is generated, a new refresh token also is issued and the existing one is trashed.
+
+## Background to JWT
+
+JWT is used for user authentication and to exchange information
+
+Steps for user authentication
+
+1. Client sends username and password to server over https
+2. Server verifies credentials
+3. Server issues token
+4. Server sends token to client
+5. Client stores this token in the browser as a cookie
+6. Every request from the client from now on includes this cookie 
+7. Server extracts the token from the cookie on every request from the client
+8. Server validates the token on every request
+9. Server provides the information requested
+
+## JWT structure
+
+Header is encded in base64url
+
+```json
+{ 
+  "alg":"RS256",
+  "typ":"JWT"
+}
+```
+
+Payload contains `claims` and expiry in seconds, and is encoded with base64url
+
+*Note this is not encrypted so passwords are not stored here*
+
+```json
+{
+  "id":"1234",
+  "name":"Phil",
+  "role":"author",
+  "exp":3600
+}
+```
+
+Signature is a hash, or MAC Message Authentication Code to verify token has not been modified
+
+Signature generated from header + payload + secret
+
+We can either use symmetric (HMAC) or asymmetric (RS256) to verify
+
+
+
+
+
+- Payload
+  - {
+  - }
+- Signature
 
 ## Back End in Node!
 
@@ -287,13 +358,21 @@ console.log('Listening on 3001')
 
 ## HTTPS
 
-We can now build in an `https` back end
+We can now build in an `https` back end 
+
+also adding in 
+
+```powershell
+yarn add cookie-parser body-parser
+```
 
 ```js
 const fs = require('fs');
 const http = require('http')
 const https = require('https');
 const express = require('express');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const privateKey = fs.readFileSync('key.pem');
 const publicCertificate = fs.readFileSync('cert.pem');
@@ -306,7 +385,8 @@ const jsonwebtoken = require('jsonwebtoken');
 const jwtSecret = 'secret123';
 const app = express();
 app.use(cors());
-app.use(expressJwt({secret:jwtSecret,algorithms:['HS256'] }));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended:false}));
 const homePage = (request,response) => {
     response.setHeader('Access-Control-Allow-Origin','*');
     response.setHeader('Access-Control-Request-Method','*');
@@ -327,24 +407,58 @@ const jwt = (request, response) => {
     response.writeHead(200,{'Content-Type':'application/json'});
     response.end(JSON.stringify(data));
 }
-const foods = [
+const foodData = [
     { id: 1, description: 'burritos' },
     { id: 2, description: 'quesadillas' },
     { id: 3, description: 'churos' }
 ];
-const getFood = (request,response) => {
+const foods = (request,response) => {
     response.setHeader('Access-Control-Allow-Origin','*');
     response.setHeader('Access-Control-Request-Method','*');
     response.setHeader('Access-Control-Allow-Methods','OPTIONS,GET')
     response.writeHead(200,{'Content-Type':'application/json'});
-    response.end(JSON.stringify(foods));
+    response.end(JSON.stringify(foodData));
 }
 app.get('/',homePage);
 app.get('/jwt',jwt);
-app.get('/getFood',getFood);
+// foods now requires a token
+app.use(expressJwt({
+    secret:jwtSecret,
+    algorithms:['HS256'] 
+}));
+app.get('/foods',foods);
 const httpServer = http.createServer(app)
 const httpsServer = https.createServer(credentials,app)
 httpServer.listen(3001);
 httpsServer.listen(3002);
 console.log('http listening on 3001 and https on 3002');
 ```
+
+## Providing A Token As Authorization
+
+In the client we can test this out with `curl`
+
+```powershell
+curl 
+  --location 
+  --request GET 'http://localhost:3001'
+  --header 'Accept: application/json' 
+  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicGhpbGFuZGVyc29uIiwiaWF0IjoxNjA2MTIxNjQ3fQ.6zJljxMjhbo1Zv_QJEJQ3zp2PjkcFOqADIQeCNNBdWY'
+  --data-raw ''
+```
+
+
+curl --location --request GET 'https://localhost:3001' --header 'Accept: application/json' --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicGhpbGFuZGVyc29uIiwiaWF0IjoxNjA2MTIzNTIxfQ.OXkZYBaHi2i3kzTwO6WP2CZ1dk3inaeWIJnriRU5AOA'
+
+
+
+## Flow 2 - JWT
+
+This is using a different tutorial to see how we get on!  
+
+August 2020 so definitely up to date!
+
+https://livecodestream.dev/post/2020-08-11-a-practical-guide-to-jwt-authentication-with-nodejs/
+
+
+
