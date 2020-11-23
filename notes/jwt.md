@@ -1,4 +1,4 @@
-# React with JWT
+p# React with JWT
 
 ## Author
 
@@ -7,19 +7,19 @@ November 2020
 
 ## Contents
 
-- [React with JWT](#react-with-jwt)
-  - [Author](#author)
-  - [Contents](#contents)
-  - [Introduction](#introduction)
-  - [Background to JWT](#background-to-jwt)
-  - [JWT structure](#jwt-structure)
-  - [Back End in Node!](#back-end-in-node)
-  - [Install back end](#install-back-end)
-  - [JWT token](#jwt-token)
-  - [React front end](#react-front-end)
-  - [HTTPS](#https)
-  - [Providing A Token As Authorization](#providing-a-token-as-authorization)
-  - [Flow 2 - JWT](#flow-2---jwt)
+- [Author](#author)
+- [Contents](#contents)
+- [Introduction](#introduction)
+- [Background to JWT](#background-to-jwt)
+- [JWT structure](#jwt-structure)
+- [Back End in Node!](#back-end-in-node)
+- [Install back end](#install-back-end)
+- [JWT token](#jwt-token)
+- [React front end](#react-front-end)
+- [HTTPS](#https)
+- [Providing A Token As Authorization](#providing-a-token-as-authorization)
+- [Flow 2 - JWT](#flow-2---jwt)
+- [Flow 3 - JWT](#flow-3---jwt)
 
 ## Introduction
 
@@ -31,9 +31,11 @@ Benefit of JWT is its stateless nature - there is no need to store the token on 
 
 Secure - JWT is sent in a cookie
 
-Insecure - JWT is sent in the `authorization` http header and using https only otherwise man in the middle attack can occur
+Insecure - JWT is sent in the `authorization` http header and using https only otherwise man-in-middle attack can occur
 
 An issue is that if we store the token in the localstorage of the client, this makes it susceptible to XSS cross-site scripting attack.  So we must set `HttpOnly` and `secure` flags of the cookie which we are storing in localstorage.
+- httpOnly prevents the cookie from being accessed other than over http
+- secure will not send unless https is being used
 
 If we set an expiry of 10 minutes we can refresh after that time.  We use a JWT refresh token with a longer expiry and is used to issue a new short-term JWT token every time that one expires.  Refresh tokens are not sent to the client but are stored in a back-end database.  Also every time a new access token is generated, a new refresh token also is issued and the existing one is trashed.
 
@@ -54,6 +56,8 @@ Steps for user authentication
 9. Server provides the information requested
 
 ## JWT structure
+
+<p align="center><img src="https://www.sohamkamani.com/1c2963a562418d9fccfa9c6667da826c/jwt-algo.svg" /></p>
 
 Header is encded in base64url
 
@@ -83,14 +87,6 @@ Signature generated from header + payload + secret
 
 We can either use symmetric (HMAC) or asymmetric (RS256) to verify
 
-
-
-
-
-- Payload
-  - {
-  - }
-- Signature
 
 ## Back End in Node!
 
@@ -459,6 +455,136 @@ This is using a different tutorial to see how we get on!
 August 2020 so definitely up to date!
 
 https://livecodestream.dev/post/2020-08-11-a-practical-guide-to-jwt-authentication-with-nodejs/
+
+```powershell
+yarn add express cookie-parser body-parser dotenv json-web-token 
+```
+
+check out `jwt-02` folder but I couln't get off the ground with this one - too complex!
+
+Delete this item and `jwt-02` code!
+
+## Flow 3 - JWT
+
+https://www.sohamkamani.com/blog/javascript/2019-03-29-node-jwt-authentication/ with code at https://github.com/sohamkamani/jwt-nodejs-example
+
+written in 2019 so hopefully should be in date!
+
+This works !
+
+server.js
+
+```js
+const express = require("express")
+const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
+
+const { signIn, welcome, refresh } = require("./handlers")
+
+const app = express()
+app.use(bodyParser.json())
+app.use(cookieParser())
+
+app.post("/signin", signIn)
+app.get("/welcome", welcome)
+app.post("/refresh", refresh)
+app.get('/',(request,response)=>{
+    response.send(`Welcome`)
+    return response.status(200).end()
+})
+
+app.listen(8000)
+console.log('listening on port 8000')
+```
+
+handlers.js
+
+```js
+const jwt = require('jsonwebtoken')
+const jwtKey = 'my_secret_key'
+const jwtExpirySeconds = 60
+const users = {
+  user1: 'password1',
+  user2: 'password2'
+}
+const signIn = (req, res) => {
+  const { username, password } = req.body
+  console.log(req)
+  console.log ('user', req.body)
+  if (!username || !password || users[username] !== password) {
+    res.send('not authorised')
+    return res.status(401).end()
+  }
+  const token = jwt.sign({ username }, jwtKey, {
+    algorithm: 'HS256',
+    expiresIn: jwtExpirySeconds
+  })
+  console.log('token:', token)
+  res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 })
+  res.send(token)
+  res.end()
+}
+const welcome = (req, res) => {
+  const token = req.cookies.token
+  if (!token) {
+    return res.status(401).end()
+  }
+  var payload
+  try {
+    payload = jwt.verify(token, jwtKey)
+  } catch (e) {
+    if (e instanceof jwt.JsonWebTokenError) {
+      return res.status(401).end()
+    }
+    return res.status(400).end()
+  }
+  res.send(`Welcome \n\n${payload.username}!\n\ntoken - ${token}\n\npayload - ${JSON.stringify(payload)}\n\ncookies - ${JSON.stringify(req.cookies)}\n\ntoken cookie - ${req.cookies.token}`)
+}
+const refresh = (req, res) => {
+  const token = req.cookies.token
+  if (!token) {
+    return res.status(401).end()
+  }
+  var payload
+  try {
+    payload = jwt.verify(token, jwtKey)
+  } catch (e) {
+    if (e instanceof jwt.JsonWebTokenError) {
+      return res.status(401).end()
+    }
+    return res.status(400).end()
+  }
+  // We ensure that a new token is not issued until enough time has elapsed
+  // In this case, a new token will only be issued if the old token is within
+  // 30 seconds of expiry. Otherwise, return a bad request status
+  const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
+  if (payload.exp - nowUnixSeconds > 30) {
+    return res.status(400).end('Bad request.  Cannot refresh token as too soon')
+  }
+  const newToken = jwt.sign({ username: payload.username }, jwtKey, {
+    algorithm: 'HS256',
+    expiresIn: jwtExpirySeconds
+  })
+  res.cookie('token', newToken, { maxAge: jwtExpirySeconds * 1000 })
+  res.send(`Token has been refreshed\nuser ${payload.username}\n\ntoken - ${newToken}!`)
+  res.end()
+}
+
+module.exports = {
+  signIn,
+  welcome,
+  refresh
+}
+```
+
+Run using `Postman`
+
+- POST http://localhost:8000/signin with Body => Raw => {"username":"user2","password":"password2"}
+- GET  http://localhost:8000/welcome
+- POST http://localhost:8000/refresh
+
+returns the token and a cookie with the token in it.  This expires after 60 seconds and can be refreshed with 30 seconds to go.  After 60 seconds inactivity the token becomes invalid and a fresh login has to be made.  On a valid GET request the username and cookie are returned
+
 
 
 
