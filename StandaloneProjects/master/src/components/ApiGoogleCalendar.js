@@ -1,5 +1,5 @@
 import React from 'react'
-import NavbarAPIs from './NavbarAPIs'
+import NavbarAPIs from './NavbarAPI'
 class ApiGoogleCalendar extends React.Component {
     constructor(){
         super()

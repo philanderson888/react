@@ -4,11 +4,11 @@ class Navbar extends React.Component {
     render(){
         return(
             <div>
-                <h1>React API Application</h1>
+                <h1>Learning React</h1>
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
-                <Link to="/apis">APIs</Link>&nbsp;|&nbsp;
-                <Link to="/components">Components</Link>
-
+                <Link to="/components">Components</Link>&nbsp;|&nbsp;
+                <Link to="/apis">API</Link>&nbsp;|&nbsp;
+                <Link to="/jwt">JWT</Link>
             </div>
         )
     }

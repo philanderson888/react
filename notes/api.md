@@ -4,31 +4,15 @@
 
 - [API](#api)
   - [Contents](#contents)
-  - [Introduction](#introduction)
-  - [API Get](#api-get)
   - [Resources](#resources)
-  - [Javascript Fetch](#javascript-fetch)
+  - [Introduction](#introduction)
+  - [API Get with `fetch`](#api-get-with-fetch)
   - [API Post](#api-post)
   - [API Put](#api-put)
   - [Async Delete](#async-delete)
   - [API Delete](#api-delete)
-  - [Add User With Max ID](#add-user-with-max-id)
-  - [Edit User](#edit-user)
-
-## Introduction
-
-This completes our learning with an API with regards to 
-
-- HTTP GET
-- HTTP POST
-- HTTP DELETE
-- HTTP PUT
-
-We use `fetch` initially but then move to using `axios`
-
-## API Get 
-
-Let's try and read data from an API to our react page using Javascript fetch
+  - [API Insert with Max ID](#api-insert-with-max-id)
+  - [API Edit](#api-edit)
 
 ## Resources
 
@@ -37,8 +21,18 @@ https://www.smashingmagazine.com/2020/06/rest-api-react-fetch-axios/
 https://www.youtube.com/watch?v=T3Px88x_PsA&ab_channel=BenAwad
 
 https://api.randomuser.me
+## Introduction
 
-## Javascript Fetch
+This looks at 
+
+- HTTP GET
+- HTTP POST
+- HTTP DELETE
+- HTTP PUT
+
+using `fetch` and `axios`
+
+## API Get with `fetch`
 
 Using https://reactjs.org/docs/faq-ajax.html as a lead document
 
@@ -57,7 +51,7 @@ class Parent extends React.Component {
             isLoaded:false,
             todos:[]
         }
-    }
+    }  
     componentDidMount(){
         fetch('https://jsonplaceholder.typicode.com/todos')
         .then(response => response.json())
@@ -524,7 +518,7 @@ render(){
 }
 ```
 
-## Add User With Max ID
+## API Insert with Max ID
 
 We now have a problem in that when we delete a user, we are taking the new id from the length of the array.  This was OK before we started deleting users!
 
@@ -815,7 +809,7 @@ export default ApiDelete2
 
 <p align="center"><img src="images/api-create-read-delete.png" /></p>
 
-## Edit User
+## API Edit 
 
 Now let's see if we can edit a user!!!
 

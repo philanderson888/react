@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-class NavbarAPIs extends React.Component {
+class NavbarAPI extends React.Component {
     render(){
         return(
             <div>
@@ -11,11 +11,9 @@ class NavbarAPIs extends React.Component {
                 <Link to="/api-put">API Put</Link>&nbsp;|&nbsp;
                 <Link to="/api-delete">API Delete</Link>&nbsp;|&nbsp;
                 <Link to="/api-delete-2">API Delete 2</Link>&nbsp;|&nbsp;
-                <Link to="/api-google-calendar">API Google Calendar</Link>&nbsp;|&nbsp;
-                <Link to="/jwt-http">JWT over HTTP</Link>&nbsp;|&nbsp;
-                <Link to="/jwt-https">JWT over HTTPs</Link>
+                <Link to="/api-google-calendar">API Google Calendar</Link>
             </div>
         )
     }
 }
-export default NavbarAPIs
+export default NavbarAPI

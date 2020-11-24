@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import NavbarAPIs from './NavbarAPIs'
+import NavbarAPIs from './NavbarAPI'
 class ApiDelete2 extends React.Component {
     constructor(){
         super()
