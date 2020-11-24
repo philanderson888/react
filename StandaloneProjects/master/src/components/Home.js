@@ -5,7 +5,7 @@ class Home extends React.Component {
         return(
             <div>
                 <Navbar />
-                <h2>Home</h2>
+                <h2>Home Page</h2>
             </div>  
         )
     }

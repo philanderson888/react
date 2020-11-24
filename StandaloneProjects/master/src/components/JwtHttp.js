@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import NavbarAPIs from './NavbarAPIs'
+import NavbarJwt from './NavbarJwt'
 const url = 'http://localhost:3001';
 export default function JwtHttp() {
     const [foods, setFoods] = useState([]);
@@ -9,8 +9,9 @@ export default function JwtHttp() {
     const getFoods = () => {
         axios.get(`${url}/foods`)
         .then((response)=> {
-          console.log('food data',response.data.foods);
-          setFoods(response.data.foods);
+          console.log('response',response);
+          console.log('response.data',response.data);
+          setFoods(response.data);
         });
     }
     const getJwt = () => {
@@ -30,7 +31,7 @@ export default function JwtHttp() {
     } 
     return (
       <div>
-        <NavbarAPIs />
+        <NavbarJwt />
         <h2>Getting data from an API</h2>
         <button onClick={()=>getJwt()}>Get JWT</button>
         <button onClick={()=>getFoods()}>Get Foods</button>
@@ -50,9 +51,11 @@ export default function JwtHttp() {
     );
 }
 /*
-This works with this server
+This works with these servers
 
+https://github.com/philanderson888/nodejs/tree/master/projects/jwt/jwt
 
+for example
 
 const express = require('express');
 const jwt = require('express-jwt');

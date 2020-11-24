@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import NavbarAPIs from './NavbarAPIs'
+import NavbarAPIs from './NavbarAPI'
 class ApiPut extends React.Component {
     constructor(){
         super()
