@@ -14,9 +14,8 @@ import Hooks from './components/Hooks';
 import Reactstrap from './components/Reactstrap.js'
 import JwtHttp from './components/JwtHttp.js'
 import JwtHttps from './components/JwtHttps.js'
-import JwtGetUsers from './components/JwtGetUsers'
+import JwtAuthentication from './components/JwtAuthentication'
 import NavbarJwt from './components/NavbarJwt';
-import JwtPostCredentials from './components/JwtPostCredentials'
 function App() {
   return (
     <div className="container">
@@ -35,9 +34,8 @@ function App() {
         <Route path='/reactstrap' component={Reactstrap} />
         <Route path='/jwt-http' component={JwtHttp} />
         <Route path='/jwt-https' component={JwtHttps} />
-        <Route path='/jwt-get-users' component={JwtGetUsers} />
+        <Route path='/jwt-authentication' component={JwtAuthentication} />
         <Route path='/jwt' component={NavbarJwt} />
-        <Route path='/jwt-post-credentials' component={JwtPostCredentials} />
       </Switch>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import NavbarJWT from './NavbarJwt'
-class JwtGetUsers extends React.Component {
+class JwtAuthentication extends React.Component {
     constructor() {
         super()
         this.state = {
@@ -10,6 +10,8 @@ class JwtGetUsers extends React.Component {
                 username:'',
                 password:'',
             },
+            token:'',
+            cookiePhil:'',
         }
     }
     componentDidMount() {
@@ -26,7 +28,9 @@ class JwtGetUsers extends React.Component {
         console.log('about to post this user to back end for validation',user);
         axios.post('http://localhost:3001/signin',user)
             .then(response => {
-                console.log(`response.data`,response.data)
+                console.log(`response.data`,response.data);
+                console.log(`response`,response);
+                console.log(`cookies`,document.cookie);
         });
     }
     onTypeUsername = event => {
@@ -69,7 +73,8 @@ class JwtGetUsers extends React.Component {
         return (
             <div>
                 <NavbarJWT />
-                <h2>JWT First Get List Of Users</h2>
+                <h2>JWT Authentication</h2>
+                <h4>First get list of users</h4>
                 <p>This is just to prove the API is working OK!</p>
                 <ul>
                     {users.map(user=>(
@@ -84,4 +89,4 @@ class JwtGetUsers extends React.Component {
         );
     }
 }
-export default JwtGetUsers
+export default JwtAuthentication
