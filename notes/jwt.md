@@ -20,6 +20,7 @@ November 2020
 - [Providing A Token As Authorization](#providing-a-token-as-authorization)
 - [Flow 2 - JWT](#flow-2---jwt)
 - [Flow 3 - JWT](#flow-3---jwt)
+- [Credentials](#credentials)
 
 ## Introduction
 
@@ -589,3 +590,27 @@ returns the token and a cookie with the token in it.  This expires after 60 seco
 Looking good - 
 
 https://www.youtube.com/watch?v=wKddzNMDnaQ&ab_cha
+
+## Credentials
+
+API tokens
+
+```js
+const config = {
+    headers: {
+        "Content-Type": "application/json",
+        "x-auth-token" : localStorage.getItem('token')
+    }
+}
+```
+
+JWT token
+
+```js
+const headers = {
+  "Content-Type": "application/json",
+  "Authorization": `Bearer ${token}`,
+}
+```
+
+

@@ -1,36 +1,64 @@
 import React from 'react'
 import axios from 'axios';
 import NavbarJWT from './NavbarJwt'
+import Cookies from 'js-cookie';
 class JwtAuthentication extends React.Component {
     constructor() {
         super()
         this.state = {
             users:[],
             user: {
-                username:'',
-                password:'',
+                username:'bob',
+                password:'123',
             },
-            token:'',
-            cookiePhil:'',
+            token:Cookies.get('token'),
         }
     }
-    componentDidMount() {
-        fetch(`http://localhost:3001/users`)
+    componentDidMount() {        
+        Cookies.set('test22','test cookie22')
+        Cookies.set('token',sessionStorage.getItem('token'));
+        const headers = {"Content-Type":"application/json"};
+        let token = this.state.token;
+        if(!token) {
+            token = sessionStorage.getItem('token');
+        }
+        console.log(`token in componentDidMount is `, token)
+        if(token){
+            headers["Authorization"] = `Token ${token}`
+        }
+        fetch(`http://localhost:3001/users`,{headers})
             .then(response => response.json())
             .then(users => {
                 this.setState({
-                    users
+                    users,
                 })
             })
+        this.setState({
+            token,
+        })
     }
     login = () => {
         const user = this.state.user;
         console.log('about to post this user to back end for validation',user);
-        axios.post('http://localhost:3001/signin',user)
+        let headers = {"Content-Type":"application/json"};
+        const token = sessionStorage.getItem('token');
+        console.log(`token sending with login request is `,token)
+        if(token){
+            headers = {
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`,
+            }
+            Cookies.set('token',sessionStorage.getItem('token'));
+        }
+        console.log('headers about to be sent to ths server with login credentials',headers)
+        axios.post('http://localhost:3001/signin',user,{headers})
             .then(response => {
                 console.log(`response.data`,response.data);
                 console.log(`response`,response);
-                console.log(`cookies`,document.cookie);
+                console.log(`all cookies`,Cookies.get())
+                console.log(`token from server received `,Cookies.get('token'));
+                // axios returns cookies sent from the server, back to the server again
+                //axios.defaults.withCredentials=true;
         });
     }
     onTypeUsername = event => {
