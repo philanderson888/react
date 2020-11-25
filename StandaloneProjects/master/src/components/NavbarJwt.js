@@ -8,7 +8,7 @@ class NavbarJwt extends React.Component {
                 <Link to="/">Home</Link>&nbsp;|&nbsp;
                 <Link to="/jwt-http">Http</Link>&nbsp;|&nbsp;
                 <Link to="/jwt-https">Https</Link>&nbsp;|&nbsp;
-                <Link to="/jwt-get-users">JWT Users</Link>&nbsp;|&nbsp;
+                <Link to="/jwt-authentication">JWT Authentication</Link>
             </div>
         )
     }
