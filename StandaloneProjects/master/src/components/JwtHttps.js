@@ -28,10 +28,10 @@ export default function JwtHttps() {
         console.log('token',response.data.token)
         setJwt(response.data.token)  
       })
-    }  
+    }   
     const getItems = () => {
       console.log('getting items')
-      const array = myarray
+      const array = [...myarray] 
       array.push(array.length+1)
       console.log('array',array)
       setMyarray(array)  

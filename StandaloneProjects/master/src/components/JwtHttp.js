@@ -24,7 +24,7 @@ export default function JwtHttp() {
     }  
     const getItems = () => {
       console.log('getting items')
-      const array = myarray
+      const array = [...myarray] 
       array.push(array.length+1)
       console.log('array',array)
       setMyarray(array)  
@@ -43,8 +43,8 @@ export default function JwtHttp() {
           ))}
         </ul>
         <ul>
-          {myarray.map((item)=>(
-            <li key={item}>{item}</li>  
+          {myarray.map(item=>(
+            <li>{item}</li>  
           ))}
         </ul>
       </div>
