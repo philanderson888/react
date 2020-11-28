@@ -2,14 +2,14 @@ import React from 'react'
 import axios from 'axios';
 import NavbarJWT from './NavbarJwt'
 import Cookies from 'js-cookie';
-class JwtAuthentication extends React.Component {
+class Login extends React.Component {
     constructor() {
         super()
         this.state = {
             users:[],
             user: {
                 username:'bob',
-                password:'123',
+                password:'1234',
             },
             token:Cookies.get('token'),
         }
@@ -59,6 +59,8 @@ class JwtAuthentication extends React.Component {
                 console.log(`token from server received `,Cookies.get('token'));
                 // axios returns cookies sent from the server, back to the server again
                 //axios.defaults.withCredentials=true;
+                console.log(`log in success ! now redirecting to authenticated page`)
+                setTimeout(() => window.location.replace(`/secure-data?username=${user.username}`),4000);                
         });
     }
     onTypeUsername = event => {
@@ -80,30 +82,14 @@ class JwtAuthentication extends React.Component {
             }
         })
     }
-    onAddUser = () => {
-        let user = this.state.user
-        let users = this.state.users
-        axios.post('https://jsonplaceholder.typicode.com/users', user)
-            .then(response => {
-                user = response.data
-                user.id = this.state.users.length+1
-                console.log(user)
-                users = [...this.state.users, user]
-                console.log(users)
-                this.setState({ 
-                    user,
-                    users
-                })
-            });
-    }
     render() {
         const { users } = this.state;
         return (
             <div>
                 <NavbarJWT />
-                <h2>JWT Authentication</h2>
-                <h4>First get list of users</h4>
-                <p>This is just to prove the API is working OK!</p>
+                <h2>Sign In</h2>
+                <h4>Users</h4>
+                <p>Proves API works !</p>
                 <ul>
                     {users.map(user=>(
                         <li key={user.username}>User <strong>{user.username}</strong> has password <strong>{user.password}</strong></li>
@@ -117,4 +103,4 @@ class JwtAuthentication extends React.Component {
         );
     }
 }
-export default JwtAuthentication
+export default Login
