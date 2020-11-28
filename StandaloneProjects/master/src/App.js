@@ -11,10 +11,12 @@ import API from './components/API';
 import NavbarComponents from './components/NavbarComponents';
 import MouseTracker from './components/MouseTracker';
 import Hooks from './components/Hooks';
-import Reactstrap from './components/Reactstrap.js'
-import JwtHttp from './components/JwtHttp.js'
-import JwtHttps from './components/JwtHttps.js'
-import JwtAuthentication from './components/JwtAuthentication'
+import Reactstrap from './components/Reactstrap'
+import JwtHttp from './components/JwtHttp'
+import JwtHttps from './components/JwtHttps'
+import SecureData from './components/SecureData'
+import Login from './components/Login'
+import Register from './components/Register'
 import NavbarJwt from './components/NavbarJwt';
 function App() {
   return (
@@ -34,7 +36,9 @@ function App() {
         <Route path='/reactstrap' component={Reactstrap} />
         <Route path='/jwt-http' component={JwtHttp} />
         <Route path='/jwt-https' component={JwtHttps} />
-        <Route path='/jwt-authentication' component={JwtAuthentication} />
+        <Route path='/secure-data' component={SecureData} />
+        <Route path='/login' component={Login} />
+        <Route path='/register' component={Register} />
         <Route path='/jwt' component={NavbarJwt} />
       </Switch>
     </div>
