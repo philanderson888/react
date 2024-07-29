@@ -11,7 +11,7 @@ export default function RootLayout({
       {/* add external font*/}
       <body className={`${inter.className} antialiased`}>
         <h1>Dashboard ... By Phil</h1>
-        <h1 className="text-blue-500">I'm blue!</h1>
+        <h1 className="text-blue-500">some blue text</h1>
         {children}
         <h2>Footer</h2>
         </body>
