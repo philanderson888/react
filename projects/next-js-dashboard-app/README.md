@@ -196,7 +196,7 @@ we use `<Link href="…"> instead of `<a href=...>` tags
 
 using `clsx` we see that the active link is now highlighted so the user knows which page they are on
 
-
+.
 
 
 
