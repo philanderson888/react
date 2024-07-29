@@ -6,7 +6,9 @@
   - [contents](#contents)
   - [references](#references)
   - [installation](#installation)
-    - [install node](#install-node)
+    - [install node on mac](#install-node-on-mac)
+    - [install latest tools on windows](#install-latest-tools-on-windows)
+    - [install latest node and npm on windows using chocolatey](#install-latest-node-and-npm-on-windows-using-chocolatey)
     - [install pnpm](#install-pnpm)
     - [install project](#install-project)
     - [install libraries](#install-libraries)
@@ -14,6 +16,7 @@
   - [chapter 2 - add css](#chapter-2---add-css)
   - [chapter 3 - fonts and images](#chapter-3---fonts-and-images)
   - [chapter 4 - layouts and pages](#chapter-4---layouts-and-pages)
+  - [chapter 5 - navigation](#chapter-5---navigation)
 
 ## references
 
@@ -23,15 +26,53 @@ https://nextjs.org/learn/dashboard-app/getting-started
 
 ## installation
 
-### install node
+### install node on mac
 
-```
+```js
 brew install node@20
+```
+
+### install latest tools on windows
+
+install these tools in this order
+
+1. winget
+2. powershell preview
+3. chocolatey
+
+```js
+// winget check version
+winget -v
+// v1.8.1911
+// powershell check version
+winget search Microsoft.Powershell
+// Name               Id                           Version Source
+// ---------------------------------------------------------------
+// PowerShell         Microsoft.PowerShell         7.4.4.0 winget
+// PowerShell Preview Microsoft.PowerShell.Preview 7.5.0.3 winget
+// 
+// winget install latest powershell preview version
+winget install --id Microsoft.Powershell.Preview --source winget
+// 
+choco upgrade chocolatey
+// check version
+choco
+// v2.3.0
+```
+
+### install latest node and npm on windows using chocolatey
+
+```js
+choco install nodejs-lts --version="20.16.0"
+node -v
+// v20.16.0
+npm -v
+// 10.8.2
 ```
 
 ### install pnpm
 
-```js
+```jsnpm -v
 sudo npm install -g pnpm -y
 ```
 
@@ -131,6 +172,30 @@ next/image
 
 
 ## chapter 4 - layouts and pages
+
+`page.tsx` is default page
+
+`layout.tsx` holds default routes and creates a page common across child routes ie a parent container
+
+
+when we use the <Layout /> components eg </SideNav> we use `partial rendering` where only the page body updates, not the side menus, when we navigate
+
+page
+  nav
+    body1
+    body2
+
+when we navigate from page 1 to page 2, only the body1 or body2 items update
+
+
+## chapter 5 - navigation
+
+we use `next/link` to navigate
+
+we use `<Link href="…"> instead of `<a href=...>` tags
+
+using `clsx` we see that the active link is now highlighted so the user knows which page they are on
+
 
 
 
