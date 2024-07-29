@@ -17,6 +17,7 @@
   - [chapter 3 - fonts and images](#chapter-3---fonts-and-images)
   - [chapter 4 - layouts and pages](#chapter-4---layouts-and-pages)
   - [chapter 5 - navigation](#chapter-5---navigation)
+  - [chapter 6 - database](#chapter-6---database)
 
 ## references
 
@@ -198,5 +199,33 @@ using `clsx` we see that the active link is now highlighted so the user knows wh
 
 
 
+## chapter 6 - database
+
+we are using `@vercel/postgres` database here for this demo but any database can be used
+
+on `vercel` project click `storage` and create a `postgres` database
+
+give your database a name 
+
+```js
+nextjs-dashboard-postgres
+```
+
+connect to the database
+
+in `.env.local` tab click `show secret` and copy the data
+
+update the contents into the `.env` file in the project root
+
+next run
+
+```js
+pnpm i @vercel/postgres
+```
+
+to install the postgres database hosted by vercel
+
+next, seed the database
 
 
+we use `react server components`

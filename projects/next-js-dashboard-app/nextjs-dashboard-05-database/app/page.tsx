@@ -5,7 +5,7 @@ import styles from '@/app/ui/home.module.css';
 import { lusitana } from './ui/fonts';
 import Image from 'next/image';
 
-export default function Page() {
+export default async function Page() {
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div className="absolute w-0 h-0 border-l-[15px] border-r-[15px] border-b-[26px] border-l-transparent border-r-transparent border-b-gray-100">Top</div>
@@ -32,6 +32,7 @@ export default function Page() {
           >
             <span>Log in</span> <ArrowRightIcon className="w-5 md:w-6" />
           </Link>
+
           <h1 className="text-blue-500">I'm blue!</h1>
           <h1 className="text-blue-500">This is a triangle</h1> 
           <div className="relative w-0 h-0 border-l-[15px] border-r-[15px] border-b-[26px] border-l-transparent border-r-transparent border-b-black" />
