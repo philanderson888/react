@@ -18,6 +18,8 @@
   - [chapter 4 - layouts and pages](#chapter-4---layouts-and-pages)
   - [chapter 5 - navigation](#chapter-5---navigation)
   - [chapter 6 - database](#chapter-6---database)
+  - [rendering](#rendering)
+  - [streaming](#streaming)
 
 ## references
 
@@ -229,3 +231,22 @@ next, seed the database
 
 
 we use `react server components`
+
+## rendering
+
+static - data fetch and render all takes place on server, result is cached
+
+dynamic - data freshly rendered on the server for every request
+
+## streaming
+
+we use `loading.tsx` and `<Suspense>` to stream data
+
+to show 'loading text while a page is loading we use'
+
+```jsx
+export default function Loading() {
+    return <div>Loading...</div>;
+  }
+```
+
