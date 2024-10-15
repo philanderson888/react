@@ -75,7 +75,8 @@ npm -v
 
 ### install pnpm
 
-```jsnpm -v
+```js
+npm -v
 sudo npm install -g pnpm -y
 ```
 
