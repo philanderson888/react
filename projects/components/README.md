@@ -235,123 +235,41 @@ output is
 
 We can write a component as a class rather than as a function
 
-We already see the component as a function
+```js
+import ComponentFixed from "./ComponentFixed";
+import ComponentWithData from "./ComponentWithData";
+import ComponentAsClass from "./components/ComponentAsClass";
+import ComponentAsFunction from "./components/ComponentAsFunction";
 
-```jsx
-import Component01 from './Component01'
 function App(data) {
   return (
     <div className="App">
       <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
+      <ComponentFixed />
+      <ComponentWithData data={{ name: "Component with data" }} />
+      <ComponentAsFunction data={{ name: "Component A As Function" }} />
+      <ComponentAsClass data={{ name: "Component B As Class" }} />
     </div>
   );
 }
+
 export default App;
 ```
 
-but we also see it as a class so let's make it happen!
-
-Let's create it
+and the component 
 
 ```js
-create-react-app component-05-component-as-class;cd component-05-component-as-class;yarn start
-```
-
-Remove all of the extra files not needed
-
-```jsx
-function App() {
-  return (
-    <>
-    </>
-  );
-}
-export default App;
-```
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-```
-
-Add firstly a function component
-
-```jsx
-function ComponentA(){
-    return(
-        <div>
-            This is component A
-        </div>
-    );
-}
-export default ComponentA
-```
-
-And now a class component
-
-```jsx
 import React from 'react'
-class ComponentB extends React.Component {
+class ComponentAsClass extends React.Component {
     render() {
-        return <div>This is component B</div>
+        return <div>
+            <p>This is component as a class<br />props are '{this.props.data.name}'</p>
+        </div>
     }
 }
-export default ComponentB
+export default ComponentAsClass
 ```
 
-And display them both
+which looks like
 
-```jsx
-import ComponentA from './ComponentA'
-import ComponentB from './ComponentB'
-function App() {
-  return (
-    <>
-      This is a react app!
-      <ComponentA name='componentA' />
-      <ComponentB name='componentB' />
-    </>
-  );
-}
-export default App;
-```
-
-Now pass data to them both
-
-```jsx
-function ComponentA(props){
-    return(
-        <div>
-            This is component A displaying props as '{props.name}'
-        </div>
-    );
-}
-export default ComponentA
-```
-
-```jsx
-import React from 'react'
-class ComponentB extends React.Component {
-    render() {
-        return <div>This is component B displaying props as '{this.props.name}'</div>
-    }
-}
-export default ComponentB
-```
-which now renders as
-
-```jsx
-/*
-This is a react app!
-This is component A displaying props as 'componentA'
-This is component B displaying props as 'componentB'
-*/
-```
+<img src="/images/component-05.png" width="300" />

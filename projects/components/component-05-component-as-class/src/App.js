@@ -1,12 +1,18 @@
-import ComponentA from './components/ComponentA'
-import ComponentB from './components/ComponentB'
-function App() {
+import ComponentFixed from "./ComponentFixed";
+import ComponentWithData from "./ComponentWithData";
+import ComponentAsClass from "./components/ComponentAsClass";
+import ComponentAsFunction from "./components/ComponentAsFunction";
+
+function App(data) {
   return (
-    <>
-      This is a react app!
-      <ComponentA name='componentA' />
-      <ComponentB name='componentB' />
-    </>
+    <div className="App">
+      <h1>{data.name}</h1>
+      <ComponentFixed />
+      <ComponentWithData data={{ name: "Component with data" }} />
+      <ComponentAsFunction data={{ name: "Component A As Function" }} />
+      <ComponentAsClass data={{ name: "Component B As Class" }} />
+    </div>
   );
 }
+
 export default App;
