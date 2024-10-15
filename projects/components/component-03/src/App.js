@@ -1,14 +1,17 @@
-import App2 from './App2'
+import './App.css';
+import Child from './Child';
+
 function App() {
   return (
     <div className="App">
-      Component App
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
+      Parent Component
+      <Child />
+      <Child />
+      <Child />
+      <Child />
+      <Child />
     </div>
   );
 }
+
 export default App;

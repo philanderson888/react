@@ -1,9 +1,9 @@
-function App2() {
+function Child() {
     return (
       <div className="App2">
-        Component App2
+        Subcomponent 
       </div>
     );
   }
-  export default App2;
+  export default Child;
   
