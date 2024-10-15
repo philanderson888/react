@@ -1,14 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 class DisplayThis extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <div>
+          <h1>Component ... name ...  {this.props.name}</h1>
+      </div>
   }
 } 
 
-const element = <DisplayThis name="Component01" />;
-
-ReactDOM.render(
-  element, document.getElementById('root')
+root.render(
+  <React.StrictMode>
+    <DisplayThis name="Component01" />
+  </React.StrictMode>
 );
