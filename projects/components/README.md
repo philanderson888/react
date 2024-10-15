@@ -1,117 +1,166 @@
-# Components
+# components
 
-## Component 01
+## contents
 
-[Component 01](component-01/README.md)
+- [components](#components)
+  - [contents](#contents)
+  - [october 2024 update](#october-2024-update)
+  - [component 01](#component-01)
+  - [component 02](#component-02)
+  - [Component 03](#component-03)
+  - [Component 04](#component-04)
+  - [Component As A Class](#component-as-a-class)
 
-Just displaying a single component
 
-[Component 02](component-02)
+## october 2024 update
 
-only one file `index.js` and removed all of the others
+finding react has made some breaking changes
 
-```jsx
+so reinstalled the framework from scratch
+
+```js
+pnpm create react-app component-01a && cd component-01a && rm -rf package-lock.json && rm -rf node_modules && pnpm install && pnpm start
+```
+
+and modified `index.js` to suit
+
+## component 01
+
+just rendering one component
+
+```js
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+class DisplayThis extends React.Component {
+  render() {
+    return <div>
+          <h1>Component ... name ...  {this.props.name}</h1>
+      </div>
+  }
+} 
+
+root.render(
+  <React.StrictMode>
+    <DisplayThis name="Component01" />
+  </React.StrictMode>
+);
+
+```
+
+
+## component 02
+
+rendering multiple components
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+
 
 class Component01 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 } 
 
 class Component02 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 }
 
 class Component03 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 }
+
+class DisplayThis extends React.Component {
+  render() {
+    return <div>
+          <h3>Component ... name ...  {this.props.name}</h3>
+      </div>
+  }
+} 
 
 const element = 
   <>
     <Component01 name="Component01" />
     <Component02 name="Component02" />
     <Component03 name="Component03" />
+    <DisplayThis name="DisplayThis" />
   </>;
 
-ReactDOM.render(
-  element, document.getElementById('root')
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+root.render(
+  <React.StrictMode>
+    {element}
+  </React.StrictMode>
 );
 ```
+
+
 
 ## Component 03
 
-This aims to build a component as a separate sub-file
+this creates a component as a separate file
+
+cloning from component 02 as the start point (not cloning the libraries)
+
+install libraries and run with
 
 ```js
-create-react-app component-03
-cd component-03
-yarn start
-```
-
-Index.js
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+pnpm install && pnpm start
 ```
 
 App.js which imports App2 component also
 
 ```jsx
-import App2 from './App2'
+import './App.css';
+import Child from './Child';
+
 function App() {
   return (
     <div className="App">
-      Component App
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
+      Parent Component
+      <Child />
+      <Child />
+      <Child />
+      <Child />
+      <Child />
     </div>
   );
 }
+
 export default App;
 ```
 
-App2.js 
+and the child component
 
-```jsx
-function App2() {
+```js
+function Child() {
     return (
-        <div className="App2">
-        Component App2
-        </div>
+      <div className="App2">
+        Subcomponent 
+      </div>
     );
-}
-export default App2;
+  }
+  export default Child;
 ```
 
-Which renders
+renders as
 
-```jsx
-/*
-Component App
-Component App2
-Component App2
-Component App2
-Component App2
-Component App2
-*/
-```
+<img src="/images/component-03.png" width="300" />
+
 
 ## Component 04
 
