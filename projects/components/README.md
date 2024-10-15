@@ -166,70 +166,70 @@ renders as
 
 This shows passing data down from one component into another
 
-```js
-create-react-app component-04
-```
-
 We pass `name` data down from root `index` to component `App`
+
+to get started we copy code apart from `node_modules` and `pnpm-lock.yaml` from previous project, then run
+
+```js
+pnpm install && pnpm start
+```
 
 index.js
 
 ```js
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App';
-ReactDOM.render(
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
-    <App name="This is the root element called 'app'"/>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <App name="root element"/>
+  </React.StrictMode>
 );
 ```
 
-Now display the data as props in `App`
+we refer to the component and pass data in
 
 ```js
+import ComponentFixed from "./ComponentFixed";
+import ComponentWithData from "./ComponentWithData";
+
 function App(data) {
   return (
     <div className="App">
       <h1>{data.name}</h1>
+      <ComponentFixed />
+      <ComponentWithData data={{ name: "Component with data" }} />
     </div>
   );
 }
 export default App;
 ```
 
-and now also into a sub-component also
+and just render out the data
 
-App.js
-
-```jsx
-import Component01 from './Component01'
-function App(data) {
-  return (
-    <div className="App">
-      <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
-    </div>
-  );
+```js
+function ComponentWithData({data}) {
+    return(
+        <>
+            {data.name}
+        </>
+    );
 }
-export default App;
+export default ComponentWithData
 ```
 
-Component01.js
+output is
 
-```jsx
-import Component01 from './Component01'
-function App(data) {
-  return (
-    <div className="App">
-      <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
-    </div>
-  );
-}
-export default App;
-```
+<img src="/images/component-04.png" width="300" />
+
+
+
+
+
 
 ## Component As A Class
 
