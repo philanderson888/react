@@ -272,4 +272,4 @@ export default ComponentAsClass
 
 which looks like
 
-<img src="/images/component-05.png" width="300" />
+<img src="/images/component-05.png" width="500" />
