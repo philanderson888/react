@@ -59,6 +59,8 @@
     - [streaming](#streaming)
     - [upgrading react canary libraries to latest version](#upgrading-react-canary-libraries-to-latest-version)
     - [next js dashboard 02 css](#next-js-dashboard-02-css)
+    - [next js dashboard 03 images](#next-js-dashboard-03-images)
+    - [next js dashboard 04 routing](#next-js-dashboard-04-routing)
 
 ## overview of react
 
@@ -1053,3 +1055,38 @@ yes!  works first time !!!
 <img src="/images/next-js-dashboard-02-css.png" width="400" />
 
 
+### next js dashboard 03 images
+
+repeat same steps as above to upgrade to latest canary and rc versions for next js and react js respectively
+
+1) commit any pending work so we have a clean sheet before we begin, in case of disaster then it becomes trivial to roll back
+2) remove node_modules
+3) remove any lock files
+4) remove any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
+5) run this command
+
+```js
+pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
+```
+
+yes!  works first time, perfect!!!
+
+<img src="/images/next-js-dashboard-03-images.png" width="400" />
+
+ok so should be trivial now to also upgrade 04 05 and 06 in the same way
+
+### next js dashboard 04 routing
+
+same steps again
+
+1) git commit all work to allow for roll back if necessary
+2) remove node_modules
+3) remove any lock files
+4) remove any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
+5) run this command
+
+```js
+pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
+```
+
+<img src="/images/next-js-dashboard-04-routing.png" width="400" />
