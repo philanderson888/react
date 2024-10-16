@@ -61,7 +61,7 @@
     - [next js dashboard 02 css](#next-js-dashboard-02-css)
     - [next js dashboard 03 images](#next-js-dashboard-03-images)
     - [next js dashboard 04 routing](#next-js-dashboard-04-routing)
-    - [next js dashboard 05 routing](#next-js-dashboard-05-routing)
+    - [next js dashboard 05 database](#next-js-dashboard-05-database)
 
 ## overview of react
 
@@ -1092,7 +1092,7 @@ pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && p
 
 image same as previous 03 version
 
-### next js dashboard 05 routing
+### next js dashboard 05 database
 
 1) git commit all work to allow for roll back if necessary
 2) remove node_modules
@@ -1104,4 +1104,4 @@ image same as previous 03 version
 pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
 ```
 
-<img src="/images/next-js-dashboard-05-database.png" width="400" />
+image same as previous 03/04 versions ... visible gui unchanged ... 
