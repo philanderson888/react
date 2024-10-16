@@ -57,6 +57,8 @@
     - [chapter 6 - database](#chapter-6---database)
     - [rendering](#rendering-1)
     - [streaming](#streaming)
+    - [upgrading react canary libraries to latest version](#upgrading-react-canary-libraries-to-latest-version)
+    - [next js dashboard 02 css](#next-js-dashboard-02-css)
 
 ## overview of react
 
@@ -969,3 +971,77 @@ export default function Loading() {
   }
 ```
 
+### upgrading react canary libraries to latest version
+
+we see an error on the current version and wish to upgrade
+
+```
+Next.js (15.0.0-canary.56) is outdated
+```
+
+can try this first
+
+remove old dependencies
+
+- node_modules
+- pnpm-lock.yaml
+
+then try
+
+```js
+yarn upgrade react@canary react-dom@canary
+```
+
+this did not work so backtracking slightly 
+
+... trying this ...
+
+firstly upgrade react
+
+```js
+yarn add --exact react@rc react-dom@rc
+```
+
+then also nextjs
+
+```js
+yarn add next@canary
+```
+
+still having unmet dependencies so try this
+
+```js
+yarn add react@canary react-dom@canary next@canary next-auth@canary 
+```
+
+... first remove `node_modules` and any lock files and also remove any references to the four libraries in `package.json`
+
+
+in summary to upgrade a project to latest version of react and canary we run
+
+
+```js
+pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
+```
+
+but first remove
+- node_modules
+- any lock files
+- any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
+
+### next js dashboard 02 css
+
+ok let's get this one upgraded also ...
+
+as before we now have the quick version so let's try it 
+
+1) remove node_modules
+2) remove any lock files
+3) remove any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
+4) run this command
+
+```js
+pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
+```
+
+let's try this on 
