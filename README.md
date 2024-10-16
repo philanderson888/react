@@ -1035,13 +1035,21 @@ ok let's get this one upgraded also ...
 
 as before we now have the quick version so let's try it 
 
-1) remove node_modules
-2) remove any lock files
-3) remove any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
-4) run this command
+1) commit any pending work so we have a clean sheet before we begin, in case of disaster then it becomes trivial to roll back
+2) remove node_modules
+3) remove any lock files
+4) remove any reference to `react` `react-dom` `nextjs` `nextjs-auth` in `package.json`
+5) run this command
 
 ```js
 pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
 ```
 
-let's try this on 
+let's try this on next js dashboard 02 css app
+
+
+yes!  works first time !!!
+
+<img src="/images/next-js-dashboard-02-css.png" width="400" />
+
+
