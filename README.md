@@ -62,6 +62,7 @@
     - [next js dashboard 03 images](#next-js-dashboard-03-images)
     - [next js dashboard 04 routing](#next-js-dashboard-04-routing)
     - [next js dashboard 05 database](#next-js-dashboard-05-database)
+    - [next js dashboard 06](#next-js-dashboard-06)
 
 ## overview of react
 
@@ -1104,4 +1105,14 @@ image same as previous 03 version
 pnpm install && pnpm add react@rc react-dom@rc next@canary next-auth@canary && pnpm dev
 ```
 
-image same as previous 03/04 versions ... visible gui unchanged ... 
+image same as previous 03/04 versions ... visible gui unchanged ... ** check actually - was the database working!  I think it was !!!  **
+
+### next js dashboard 06
+
+repeat again same steps
+
+all working !!!
+
+<img src="/images/next-js-dashboard-06-render.png" width="600" />
+
+happy days, upgraded whole app!!!
