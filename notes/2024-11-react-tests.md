@@ -47,6 +47,8 @@ and building off this page
 
 https://cpojer.net/posts/building-a-javascript-testing-framework
 
+we can see the output for this flow of tutorials at [tests](/projects/tests/)
+
 and using this code
 
 ```bash

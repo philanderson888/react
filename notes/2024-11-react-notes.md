@@ -16,6 +16,7 @@
   - [components](#components)
     - [checkbox 01](#checkbox-01)
     - [checkbox 02](#checkbox-02)
+  - [checkbox 03 developing state in a component](#checkbox-03-developing-state-in-a-component)
 
 ## basic syntax
 
@@ -154,4 +155,7 @@ shows simple checkbox using html and also react component
 ### checkbox 02
 
 adding state to component
+
+## checkbox 03 developing state in a component
+
 
