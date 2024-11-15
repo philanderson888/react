@@ -63,6 +63,8 @@
     - [next js dashboard 04 routing](#next-js-dashboard-04-routing)
     - [next js dashboard 05 database](#next-js-dashboard-05-database)
     - [next js dashboard 06](#next-js-dashboard-06)
+  - [testing](#testing)
+  - [components](#components-1)
 
 ## overview of react
 
@@ -1116,3 +1118,13 @@ all working !!!
 <img src="/images/next-js-dashboard-06-render.png" width="600" />
 
 happy days, upgraded whole app!!!
+
+## testing 
+
+see [testing notes](notes/2024-11-react-tests.md) and [testing folder](projects/tests/)
+
+## components
+
+[notes on components](notes/components.md)
+
+[comparing html component with react component]()
