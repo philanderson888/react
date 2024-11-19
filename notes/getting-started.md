@@ -30,7 +30,7 @@ Render using
 - Giant Components
 - Function vs Class
  
-## Setup
+## 2023 setup
 
 https://reactjs.org/tutorial/tutorial.html
 
@@ -118,3 +118,51 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
+## setup 2024
+
+create react app has been deprecated in favour of other more sophisticated ways of setting up a react app
+
+next js is a favourite now, one of several, so we can use this to scaffold a new app
+
+according to react's own documentation 
+
+https://react.dev/learn/start-a-new-react-project
+
+`we recommend picking one of the react-powered frameworks popular in the community` ... and `next js` is the first one on the list!
+
+## installing next js app 2024
+
+this was the 2023 version
+
+```js
+npx create-react-app my-app
+pnpm dlx create-react-app my-app
+```
+
+## installing next js using pnpm
+
+pnpm saves us space by only having one reference to any given library
+
+### install pnpm
+
+```js
+npm install -g pnpm
+pnpm --version
+```
+
+### create next js app using pnpm
+
+```js
+pnpm create next-app my-app
+pnpm create next-app my-typescript-app --template typescript
+```
+
+so we run
+
+```js
+pnpm create next-app event-01
+cd event-01
+pnpm run dev
+```
+

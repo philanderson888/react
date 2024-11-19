@@ -17,6 +17,12 @@
     - [checkbox 01](#checkbox-01)
     - [checkbox 02](#checkbox-02)
   - [checkbox 03 developing state in a component](#checkbox-03-developing-state-in-a-component)
+  - [lists](#lists)
+    - [list 01 - basic list](#list-01---basic-list)
+    - [list 02](#list-02)
+  - [list 03](#list-03)
+  - [events](#events-1)
+    - [events 01](#events-01)
 
 ## basic syntax
 
@@ -158,4 +164,71 @@ adding state to component
 
 ## checkbox 03 developing state in a component
 
+we can now use multiple checkboxes using state, to illustrate how to track states of different components
+
+<img src="/images/checkbox-with-state.png" width="300px" />
+
+
+## lists
+
+using this tutorial
+
+https://react.dev/learn#rendering-lists
+
+### list 01 - basic list
+
+```js
+npx create-next-app@latest
+// select typescript
+npm run dev
+```
+
+this creates a basic list
+
+it also shows how to display 3 items in a horizontal pattern
+
+
+### list 02
+
+copy list 01 but not the `node_modules` folder
+
+```js
+npm install
+npm run dev
+```
+
+now this lists our products using css grid model
+
+<img src="/images/react-list-01.png" width="300" />
+
+## list 03
+
+conditional rendering of items within the list
+
+if the price is above a certain amount, highlight it
+
+```jsx
+const productsList = products.map((product) => (
+<li key={product.id} className={`flex flex-col items-center ${product.price > 200 ? 'font-bold text-2xl' : ''} `} >
+    <Image src={product.image} alt={product.name} width={ product.price > 200 ? size*1.5 : size} height={ product.price > 200 ? size*1.5 : size} />
+    <div className="text-center">{product.name}</div>
+    <div className="text-center">{product.price}</div>
+</li>
+));
+```
+
+<img src="/images/react-list-02.png" width="600" />
+
+
+## events
+
+### events 01
+
+starter app for handling events
+
+```js
+pnpm create next-app event-01
+cd event-01
+pnpm run dev
+```
 
