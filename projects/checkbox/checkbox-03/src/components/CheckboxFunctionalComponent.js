@@ -1,14 +1,14 @@
 import {useState} from 'react';
 
 function CheckboxFunctionalComponent() {
-  console.log('Checkbox Functional Component ... ');
+  //console.log('Checkbox Functional Component ... ');
 
   const [checked, setChecked] = useState(false)
 
   const handleChange = (event) => {
 
-    console.log(`handle change event`);
-    console.log(`checkbox event ... name/id ${event.target.name} ${event.target.id} ... ${event.target.value} ... checked ${event.target.checked}`);
+    //console.log(`handle change event`);
+    //console.log(`checkbox event ... name/id ${event.target.name} ${event.target.id} ... ${event.target.value} ... checked ${event.target.checked}`);
     setChecked(!checked);
   }
 
