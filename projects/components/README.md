@@ -1,308 +1,277 @@
-# Components
+# components
 
-## Component 01
+[components](/README.md#components)
 
-[Component 01](component-01/README.md)
+## contents
 
-Just displaying a single component
+- [components](#components)
+  - [contents](#contents)
+  - [october 2024 update](#october-2024-update)
+  - [component 01](#component-01)
+  - [component 02](#component-02)
+  - [Component 03](#component-03)
+  - [Component 04](#component-04)
+  - [Component As A Class](#component-as-a-class)
 
-[Component 02](component-02)
 
-only one file `index.js` and removed all of the others
+## october 2024 update
 
-```jsx
+finding react has made some breaking changes
+
+so reinstalled the framework from scratch
+
+```js
+pnpm create react-app component-01a && cd component-01a && rm -rf package-lock.json && rm -rf node_modules && pnpm install && pnpm start
+```
+
+and modified `index.js` to suit
+
+## component 01
+
+just rendering one component
+
+```js
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+class DisplayThis extends React.Component {
+  render() {
+    return <div>
+          <h1>Component ... name ...  {this.props.name}</h1>
+      </div>
+  }
+} 
+
+root.render(
+  <React.StrictMode>
+    <DisplayThis name="Component01" />
+  </React.StrictMode>
+);
+
+```
+
+
+## component 02
+
+rendering multiple components
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+
+
 
 class Component01 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 } 
 
 class Component02 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 }
 
 class Component03 extends React.Component {
   render() {
-    return <h1>This is a component displaying here {this.props.name}</h1>
+    return <h3>This is a component displaying here {this.props.name}</h3>
   }
 }
+
+class DisplayThis extends React.Component {
+  render() {
+    return <div>
+          <h3>Component ... name ...  {this.props.name}</h3>
+      </div>
+  }
+} 
 
 const element = 
   <>
     <Component01 name="Component01" />
     <Component02 name="Component02" />
     <Component03 name="Component03" />
+    <DisplayThis name="DisplayThis" />
   </>;
 
-ReactDOM.render(
-  element, document.getElementById('root')
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+root.render(
+  <React.StrictMode>
+    {element}
+  </React.StrictMode>
 );
 ```
+
+
 
 ## Component 03
 
-This aims to build a component as a separate sub-file
+this creates a component as a separate file
+
+cloning from component 02 as the start point (not cloning the libraries)
+
+install libraries and run with
 
 ```js
-create-react-app component-03
-cd component-03
-yarn start
-```
-
-Index.js
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+pnpm install && pnpm start
 ```
 
 App.js which imports App2 component also
 
 ```jsx
-import App2 from './App2'
+import './App.css';
+import Child from './Child';
+
 function App() {
   return (
     <div className="App">
-      Component App
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
-      <App2 />
+      Parent Component
+      <Child />
+      <Child />
+      <Child />
+      <Child />
+      <Child />
     </div>
   );
 }
+
 export default App;
 ```
 
-App2.js 
+and the child component
 
-```jsx
-function App2() {
+```js
+function Child() {
     return (
-        <div className="App2">
-        Component App2
-        </div>
+      <div className="App2">
+        Subcomponent 
+      </div>
     );
-}
-export default App2;
+  }
+  export default Child;
 ```
 
-Which renders
+renders as
 
-```jsx
-/*
-Component App
-Component App2
-Component App2
-Component App2
-Component App2
-Component App2
-*/
-```
+<img src="/images/component-03.png" width="300" />
+
 
 ## Component 04
 
 This shows passing data down from one component into another
 
-```js
-create-react-app component-04
-```
-
 We pass `name` data down from root `index` to component `App`
+
+to get started we copy code apart from `node_modules` and `pnpm-lock.yaml` from previous project, then run
+
+```js
+pnpm install && pnpm start
+```
 
 index.js
 
 ```js
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App';
-ReactDOM.render(
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
   <React.StrictMode>
-    <App name="This is the root element called 'app'"/>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <App name="root element"/>
+  </React.StrictMode>
 );
 ```
 
-Now display the data as props in `App`
+we refer to the component and pass data in
 
 ```js
+import ComponentFixed from "./ComponentFixed";
+import ComponentWithData from "./ComponentWithData";
+
 function App(data) {
   return (
     <div className="App">
       <h1>{data.name}</h1>
+      <ComponentFixed />
+      <ComponentWithData data={{ name: "Component with data" }} />
     </div>
   );
 }
 export default App;
 ```
 
-and now also into a sub-component also
+and just render out the data
 
-App.js
-
-```jsx
-import Component01 from './Component01'
-function App(data) {
-  return (
-    <div className="App">
-      <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
-    </div>
-  );
+```js
+function ComponentWithData({data}) {
+    return(
+        <>
+            {data.name}
+        </>
+    );
 }
-export default App;
+export default ComponentWithData
 ```
 
-Component01.js
+output is
 
-```jsx
-import Component01 from './Component01'
-function App(data) {
-  return (
-    <div className="App">
-      <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
-    </div>
-  );
-}
-export default App;
-```
+<img src="/images/component-04.png" width="300" />
+
+
+
+
+
 
 ## Component As A Class
 
 We can write a component as a class rather than as a function
 
-We already see the component as a function
+```js
+import ComponentFixed from "./ComponentFixed";
+import ComponentWithData from "./ComponentWithData";
+import ComponentAsClass from "./components/ComponentAsClass";
+import ComponentAsFunction from "./components/ComponentAsFunction";
 
-```jsx
-import Component01 from './Component01'
 function App(data) {
   return (
     <div className="App">
       <h1>{data.name}</h1>
-      <Component01 name='Component 01 displaying data' />
+      <ComponentFixed />
+      <ComponentWithData data={{ name: "Component with data" }} />
+      <ComponentAsFunction data={{ name: "Component A As Function" }} />
+      <ComponentAsClass data={{ name: "Component B As Class" }} />
     </div>
   );
 }
+
 export default App;
 ```
 
-but we also see it as a class so let's make it happen!
-
-Let's create it
+and the component 
 
 ```js
-create-react-app component-05-component-as-class;cd component-05-component-as-class;yarn start
-```
-
-Remove all of the extra files not needed
-
-```jsx
-function App() {
-  return (
-    <>
-    </>
-  );
-}
-export default App;
-```
-
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-```
-
-Add firstly a function component
-
-```jsx
-function ComponentA(){
-    return(
-        <div>
-            This is component A
-        </div>
-    );
-}
-export default ComponentA
-```
-
-And now a class component
-
-```jsx
 import React from 'react'
-class ComponentB extends React.Component {
+class ComponentAsClass extends React.Component {
     render() {
-        return <div>This is component B</div>
+        return <div>
+            <p>This is component as a class<br />props are '{this.props.data.name}'</p>
+        </div>
     }
 }
-export default ComponentB
+export default ComponentAsClass
 ```
 
-And display them both
+which looks like
 
-```jsx
-import ComponentA from './ComponentA'
-import ComponentB from './ComponentB'
-function App() {
-  return (
-    <>
-      This is a react app!
-      <ComponentA name='componentA' />
-      <ComponentB name='componentB' />
-    </>
-  );
-}
-export default App;
-```
-
-Now pass data to them both
-
-```jsx
-function ComponentA(props){
-    return(
-        <div>
-            This is component A displaying props as '{props.name}'
-        </div>
-    );
-}
-export default ComponentA
-```
-
-```jsx
-import React from 'react'
-class ComponentB extends React.Component {
-    render() {
-        return <div>This is component B displaying props as '{this.props.name}'</div>
-    }
-}
-export default ComponentB
-```
-which now renders as
-
-```jsx
-/*
-This is a react app!
-This is component A displaying props as 'componentA'
-This is component B displaying props as 'componentB'
-*/
-```
+<img src="/images/component-05.png" width="500" />

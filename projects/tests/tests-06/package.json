@@ -1,0 +1,23 @@
+{
+  "name": "tests-02",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.12.1+sha1.7084e7df42ee1d221994c2c2599277a2a937f050",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "expect": "^29.7.0",
+    "glob": "^11.0.0",
+    "jest-circus": "^29.7.0",
+    "jest-cli": "^29.7.0",
+    "jest-haste-map": "^29.7.0",
+    "jest-util": "^29.7.0",
+    "jest-worker": "^29.7.0"
+  }
+}

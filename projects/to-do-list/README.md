@@ -497,7 +497,7 @@ class SubmitForm extends React.Component {
 export default App;
 ```
 
-<p align="center"><img src="images/to-do-list.png" /></p>
+<p align="center"><img src="/images/to-do-list.png" /></p>
 
 ## Tests
 
